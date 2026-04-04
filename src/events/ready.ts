@@ -32,7 +32,7 @@ export default {
       status: PresenceStatusData;
     }[] = [
       {
-        name: "Sleeping in the Solarium...",
+        name: "Sleeping in the Solarium",
         type: ActivityType.Playing,
         status: "dnd",
       },
@@ -54,12 +54,12 @@ export default {
       {
         name: "Watching the clouds go over Howards Knob",
         type: ActivityType.Watching,
-        status: "online",
+        status: "idle",
       },
       {
         name: "Yelling on the 3rd floor of the library",
         type: ActivityType.Playing,
-        status: "idle",
+        status: "online",
       },
     ];
 
