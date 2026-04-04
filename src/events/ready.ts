@@ -27,10 +27,26 @@ export default {
     }
 
     const statuses = [
-      { name: "Watching you play...", type: ActivityType.Watching },
+      { name: "Watching kraut creek", type: ActivityType.Watching },
       {
-        name: "Watching the chat for commands...",
+        name: "Watching sanford mall",
         type: ActivityType.Watching,
+      },
+      {
+        name: "Waiting on the AppalCART",
+        type: ActivityType.Playing,
+      },
+      {
+        name: "Watching the clouds go over Howards Knob",
+        type: ActivityType.Watching,
+      },
+      {
+        name: "Yelling on the 3rd floor of the library",
+        type: ActivityType.Playing,
+      },
+      {
+        name: "Sleeping in the Solarium...",
+        type: ActivityType.Playing,
       },
     ];
 
