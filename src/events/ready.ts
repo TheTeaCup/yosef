@@ -59,7 +59,7 @@ export default {
       {
         name: "Yelling on the 3rd floor of the library",
         type: ActivityType.Playing,
-        status: "online",
+        status: "idle",
       },
     ];
 
