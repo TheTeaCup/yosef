@@ -1,4 +1,4 @@
-import { Events, ActivityType } from "discord.js";
+import { Events, ActivityType, PresenceStatusData } from "discord.js";
 import { ExtendedClient } from "../types/client";
 import { deployRolePanels } from "../utils/deployRolePanel.js";
 import chalk from "chalk";
@@ -26,27 +26,40 @@ export default {
       console.error("Failed to update rules:", err);
     }
 
-    const statuses = [
-      { name: "Watching kraut creek", type: ActivityType.Watching },
+    const statuses: {
+      name: string;
+      type: ActivityType;
+      status: PresenceStatusData;
+    }[] = [
+      {
+        name: "Watching kraut creek",
+        type: ActivityType.Watching,
+        status: "online",
+      },
       {
         name: "Watching sanford mall",
         type: ActivityType.Watching,
+        status: "online",
       },
       {
         name: "Waiting on the AppalCART",
         type: ActivityType.Playing,
+        status: "online",
       },
       {
         name: "Watching the clouds go over Howards Knob",
         type: ActivityType.Watching,
+        status: "online",
       },
       {
         name: "Yelling on the 3rd floor of the library",
         type: ActivityType.Playing,
+        status: "online",
       },
       {
         name: "Sleeping in the Solarium...",
         type: ActivityType.Playing,
+        status: "dnd",
       },
     ];
 
@@ -57,7 +70,7 @@ export default {
 
       client.user?.setPresence({
         activities: [{ name: status.name, type: status.type }],
-        status: "online",
+        status: status.status || "online",
       });
 
       index = (index + 1) % statuses.length;
