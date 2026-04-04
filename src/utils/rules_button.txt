@@ -1,0 +1,15 @@
+import { ActionRowBuilder, ButtonBuilder, ButtonStyle } from "discord.js";
+
+
+const row = new ActionRowBuilder<ButtonBuilder>().addComponents(
+        new ButtonBuilder()
+          .setCustomId("accept_rules")
+          .setLabel("I Agree to the Rules")
+          .setStyle(ButtonStyle.Success)
+      );
+    
+      
+      await channel.send({
+        content: "Please confirm you’ve read the rules to gain access to the server.",
+        components: [row],
+      });

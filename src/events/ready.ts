@@ -2,39 +2,52 @@ import { Events, ActivityType } from "discord.js";
 import { ExtendedClient } from "../types/client";
 import { deployRolePanels } from "../utils/deployRolePanel.js";
 import chalk from "chalk";
+import { loadData, updateRulesMessage } from "../utils/rulesEmbed";
 
 export default {
-    name: Events.ClientReady,
-    once: true,
-    async execute(client: ExtendedClient) {
-        console.log(
-            chalk.green.bold(`[App State] Bot is up and ready to go!`),
-        );
+  name: Events.ClientReady,
+  once: true,
+  async execute(client: ExtendedClient) {
+    console.log(chalk.green.bold(`[App State] Bot is up and ready to go!`));
 
-        await deployRolePanels(client);
+    await deployRolePanels(client);
 
-        const statuses = [
-            { name: "Watching you play...", type: ActivityType.Watching },
-            {
-                name: "Watching the chat for commands...",
-                type: ActivityType.Watching,
-            },
-        ];
+    const data = loadData();
+    try {
+      const channel = await client.channels.fetch(data.channelId);
 
-        let index = 0;
+      if (!channel || !channel.isTextBased()) {
+        console.error("Invalid channel.");
+        return;
+      }
 
-        const updateStatus = () => {
-            const status = statuses[index];
+      await updateRulesMessage(channel);
+    } catch (err) {
+      console.error("Failed to update rules:", err);
+    }
 
-            client.user?.setPresence({
-                activities: [{ name: status.name, type: status.type }],
-                status: "online",
-            });
+    const statuses = [
+      { name: "Watching you play...", type: ActivityType.Watching },
+      {
+        name: "Watching the chat for commands...",
+        type: ActivityType.Watching,
+      },
+    ];
 
-            index = (index + 1) % statuses.length;
-        };
+    let index = 0;
 
-        updateStatus(); // set immediately
-        setInterval(updateStatus, 5 * 60 * 1000); // every 5 minutes
-    },
+    const updateStatus = () => {
+      const status = statuses[index];
+
+      client.user?.setPresence({
+        activities: [{ name: status.name, type: status.type }],
+        status: "online",
+      });
+
+      index = (index + 1) % statuses.length;
+    };
+
+    updateStatus(); // set immediately
+    setInterval(updateStatus, 5 * 60 * 1000); // every 5 minutes
+  },
 };
