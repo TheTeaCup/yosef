@@ -70,7 +70,7 @@ export const rolePanel: RolePanel[] = [
     embed: {
       title: "📢 Update Roles",
       description: "Select what notifications you want to receive.",
-      color: 0x2e86de,
+      color: 0xffb81c,
     },
 
     roles: [

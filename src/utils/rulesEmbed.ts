@@ -47,7 +47,7 @@ export function buildRulesEmbed(rules: string): EmbedBuilder {
   return new EmbedBuilder()
     .setTitle("📜 Server Rules")
     .setDescription(rules)
-    .setColor(0x5865f2)
+    .setColor(0xffb81c)
     .setFooter({ text: `Last updated` })
     .setTimestamp();
 }
