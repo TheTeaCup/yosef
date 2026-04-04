@@ -8,7 +8,7 @@ export default {
     once: true,
     async execute(client: ExtendedClient) {
         console.log(
-            chalk.green.bold(`[Mountaineer Helper] Bot is up and ready to go!`),
+            chalk.green.bold(`[App State] Bot is up and ready to go!`),
         );
 
         await deployRolePanels(client);

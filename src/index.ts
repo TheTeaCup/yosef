@@ -10,7 +10,6 @@ import Logger from "./utils/logger.js";
 import { ExtendedClient } from "./types/client.js";
 import { rolePanel, RoleConfig } from "./data/rolePanel.js";
 
-
 Logger.start();
 
 const __filename = fileURLToPath(import.meta.url);
