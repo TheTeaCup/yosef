@@ -1,5 +1,5 @@
 import { ButtonInteraction, MessageFlags } from "discord.js";
-import { config } from "../config";
+import { config } from "../config.js";
 
 async function handleAcceptRules(interaction: ButtonInteraction) {
   if (!interaction.guild) {

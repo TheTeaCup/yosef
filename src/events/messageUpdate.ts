@@ -1,5 +1,5 @@
 import { Events, Message, EmbedBuilder } from "discord.js";
-import { config } from "../config";
+import { config } from "../config.js";
 
 const truncate = (str: string, max = 1000) =>
   str.length > max ? str.slice(0, max) + "..." : str;

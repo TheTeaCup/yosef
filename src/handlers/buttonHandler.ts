@@ -1,6 +1,6 @@
 import { ButtonInteraction } from "discord.js";
-import handleAcceptRules from "./acceptRules";
-import handleRoleSelect from "./roleSelect";
+import handleAcceptRules from "./acceptRules.js";
+import handleRoleSelect from "./roleSelect.js";
 
 export async function handleButton(interaction: ButtonInteraction) {
   const { customId } = interaction;

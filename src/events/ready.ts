@@ -2,7 +2,7 @@ import { Events, ActivityType, PresenceStatusData } from "discord.js";
 import { ExtendedClient } from "../types/client";
 import { deployRolePanels } from "../utils/deployRolePanel.js";
 import chalk from "chalk";
-import { loadData, updateRulesMessage } from "../utils/rulesEmbed";
+import { loadData, updateRulesMessage } from "../utils/rulesEmbed.js";
 
 export default {
   name: Events.ClientReady,

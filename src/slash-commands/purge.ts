@@ -5,7 +5,7 @@ import {
   MessageFlags,
 } from "discord.js";
 import { SlashCommand } from "../types/command";
-import { config } from "../config";
+import { config } from "../config.js";
 
 const command: SlashCommand = {
   data: new SlashCommandBuilder()
