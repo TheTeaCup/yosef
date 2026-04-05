@@ -12,3 +12,6 @@
 
 **Message Logging**
 Any messages that are edited or deleted are logged into a private channel on the server. This is done to ensure that abuse of our rules isn't being hidden from moderators.
+
+**Permanent Discord Invite: **
+<https://discord.gg/qGe298UdNb>
