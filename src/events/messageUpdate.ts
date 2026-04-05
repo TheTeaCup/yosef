@@ -1,4 +1,5 @@
 import { Events, Message, EmbedBuilder } from "discord.js";
+import { config } from "../config";
 
 const truncate = (str: string, max = 1000) =>
   str.length > max ? str.slice(0, max) + "..." : str;
@@ -51,7 +52,9 @@ export default {
       )
       .setTimestamp();
 
-    const channel = newMessage.guild.channels.cache.get("1489744649903145113");
+    const channel = newMessage.guild.channels.cache.get(
+      config.DISCORD_MOD_LOGS,
+    );
 
     if (channel && channel.isTextBased()) {
       await channel.send({ embeds: [embed] });

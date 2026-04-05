@@ -5,8 +5,7 @@ import {
   MessageFlags,
 } from "discord.js";
 import { SlashCommand } from "../types/command";
-
-const REQUIRED_ROLE_ID = "1489808758744940685";
+import { config } from "../config";
 
 const command: SlashCommand = {
   data: new SlashCommandBuilder()
@@ -25,8 +24,7 @@ const command: SlashCommand = {
 
     const member = interaction.guild.members.cache.get(interaction.user.id);
 
-    // Role check
-    if (!member?.roles.cache.has(REQUIRED_ROLE_ID)) {
+    if (!member?.roles.cache.has(config.DISCORD_STAFF_ROLE)) {
       await interaction.reply({
         content: "❌ You don't have permission to use this command.",
         flags: MessageFlags.Ephemeral,

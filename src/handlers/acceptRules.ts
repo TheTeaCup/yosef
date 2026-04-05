@@ -1,4 +1,5 @@
 import { ButtonInteraction, MessageFlags } from "discord.js";
+import { config } from "../config";
 
 async function handleAcceptRules(interaction: ButtonInteraction) {
   if (!interaction.guild) {
@@ -8,7 +9,7 @@ async function handleAcceptRules(interaction: ButtonInteraction) {
     });
   }
 
-  const roleId = "1489837250693955614";
+  const roleId = config.DISCORD_DEFAULT_ROLE;
 
   const member = await interaction.guild.members.fetch(interaction.user.id);
 

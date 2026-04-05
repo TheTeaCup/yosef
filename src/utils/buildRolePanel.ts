@@ -16,7 +16,6 @@ export function buildRolePanel(panel: RolePanel): {
     .setColor(panel.embed.color)
     .setFooter({ text: "You can change your roles anytime!" });
 
-  // 🔥 Support multiple rows (5 buttons max per row)
   const rows: ActionRowBuilder<ButtonBuilder>[] = [];
   let currentRow = new ActionRowBuilder<ButtonBuilder>();
 
