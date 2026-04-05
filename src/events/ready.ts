@@ -61,6 +61,11 @@ export default {
         type: ActivityType.Playing,
         status: "online",
       },
+      {
+        name: "Have you check out Mountaineer Craft?",
+        type: ActivityType.Playing,
+        status: "online",
+      },
     ];
 
     let index = 0;
