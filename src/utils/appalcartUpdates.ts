@@ -4,7 +4,7 @@ import { EmbedBuilder, WebhookClient } from "discord.js";
 
 //import { config } from "../config.js";
 
-const ROLE_ID = "appalcartrole";
+const ROLE_ID = "1489747165864792185";
 const STORAGE_PATH = "../data/appalcartMessages.json";
 
 const APPALCART_UPDATES =
