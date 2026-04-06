@@ -1,8 +1,7 @@
 import fs from "fs";
 import crypto from "crypto";
 import { EmbedBuilder, WebhookClient } from "discord.js";
-
-//import { config } from "../config.js";
+import { config } from "../config.js";
 
 const ROLE_ID = "1489747165864792185";
 const STORAGE_PATH = "../data/appalcartMessages.json";
@@ -10,8 +9,7 @@ const STORAGE_PATH = "../data/appalcartMessages.json";
 const APPALCART_UPDATES =
   "https://appalcart.etaspot.net/service.php?service=get_service_announcements&token=appstate";
 const webhook = new WebhookClient({
-  //url: config.DISCORD_APPALCART_WEBHOOK,
-  url: "https://discord.com/api/webhooks/1490177935984824430/W0vpRjHuRUBhf1noeSS-N5d2Vki50IrhFMWs2me3yxNmcKLyxf1ZMuD14qn7QeoWmRxF",
+  url: config.DISCORD_APPALCART_WEBHOOK,
 });
 
 type StoredMessage = {
@@ -112,7 +110,6 @@ export async function runAppalcartWatcher() {
     }
   }
 
-  // 🚀 SEND (batch + single ping)
   if (newEmbeds.length > 0) {
     const message = await webhook.send({
       content: shouldPing ? `<@&${ROLE_ID}>` : undefined,
@@ -127,7 +124,6 @@ export async function runAppalcartWatcher() {
     console.log(`Sent ${newEmbeds.length} new announcements`);
   }
 
-  // 🧹 DELETE expired
   for (const msg of stored) {
     if (Date.now() > msg.end) {
       try {
