@@ -3,7 +3,7 @@ import crypto from "crypto";
 import { EmbedBuilder, WebhookClient } from "discord.js";
 import { config } from "../config.js";
 
-const ROLE_ID = "1489747165864792185";
+const ROLE_ID = "appalcart-updates"; // replace with your actual role ID
 const STORAGE_PATH = "../data/appalcartMessages.json";
 
 const APPALCART_UPDATES =
