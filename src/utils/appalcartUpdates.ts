@@ -1,10 +1,10 @@
 import { WebhookClient } from "discord.js";
 import { config } from "../config.js";
 
-const webhook = new WebhookClient({
-  url: config.,
-});
 const APPALCART_UPDATES = "https://appalcart.etaspot.net/service.php?service=get_service_announcements&token=appstate";
+const webhook = new WebhookClient({
+  url: config.DISCORD_APPALCART_WEBHOOK,
+});
 
 async function fetchAppalcartUpdates() {
   try {
