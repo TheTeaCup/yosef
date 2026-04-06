@@ -69,6 +69,11 @@ export default {
         type: ActivityType.Playing,
         status: "online",
       },
+      {
+        name: "Laying in a hammock on Sanford Mall",
+        type: ActivityType.Playing,
+        status: "idle",
+      },
     ];
 
     let index = 0;
