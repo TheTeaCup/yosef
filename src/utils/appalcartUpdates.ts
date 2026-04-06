@@ -1,16 +1,27 @@
 import fs from "fs";
 import crypto from "crypto";
+import path from "path";
+import { fileURLToPath } from "url";
 import { EmbedBuilder, WebhookClient } from "discord.js";
 import { config } from "../config.js";
 
 const ROLE_ID = "appalcart-updates"; // replace with your actual role ID
-const STORAGE_PATH = "../data/appalcartMessages.json";
 
 const APPALCART_UPDATES =
   "https://appalcart.etaspot.net/service.php?service=get_service_announcements&token=appstate";
 const webhook = new WebhookClient({
   url: config.DISCORD_APPALCART_WEBHOOK,
 });
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Point to src/data/appalcartMessages.json relative to this file
+const STORAGE_PATH = path.join(__dirname, "../data/appalcartMessages.json");
+
+// Make sure the folder exists
+const dataDir = path.dirname(STORAGE_PATH);
+if (!fs.existsSync(dataDir)) fs.mkdirSync(dataDir, { recursive: true });
 
 type StoredMessage = {
   id: string;
