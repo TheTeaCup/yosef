@@ -1,36 +1,145 @@
-import { WebhookClient } from "discord.js";
-import { config } from "../config.js";
+import fs from "fs";
+import crypto from "crypto";
+import { EmbedBuilder, WebhookClient } from "discord.js";
 
-const APPALCART_UPDATES = "https://appalcart.etaspot.net/service.php?service=get_service_announcements&token=appstate";
+//import { config } from "../config.js";
+
+const ROLE_ID = "appalcartrole";
+const STORAGE_PATH = "../data/appalcartMessages.json";
+
+const APPALCART_UPDATES =
+  "https://appalcart.etaspot.net/service.php?service=get_service_announcements&token=appstate";
 const webhook = new WebhookClient({
-  url: config.DISCORD_APPALCART_WEBHOOK,
+  //url: config.DISCORD_APPALCART_WEBHOOK,
+  url: "https://discord.com/api/webhooks/1490177935984824430/W0vpRjHuRUBhf1noeSS-N5d2Vki50IrhFMWs2me3yxNmcKLyxf1ZMuD14qn7QeoWmRxF",
 });
 
-async function fetchAppalcartUpdates() {
-  try {
-    const response = await fetch(APPALCART_UPDATES);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    const data = await response.json();
-    if (data.get_service_announcements) {
-        if (data.get_service_announcements.length === 0) {
-            console.log("No service announcements found.");
-            return [];
-        }
+type StoredMessage = {
+  id: string;
+  hash: string;
+  end: number;
+};
 
-        if (data.get_service_announcements.length > 0) {
-            console.log("Service announcements found:");
-            data.get_service_announcements.forEach((announcement: any, index: number) => {
-                console.log(`Announcement ${index + 1}:`, announcement);
-            });
-        }
-    }
-    // return data.announcements || [];
-  } catch (error) {
-    console.error("Failed to fetch Appalcart updates:", error);
-    return [];
+function hashAnnouncement(text: string, start: string) {
+  return crypto
+    .createHash("sha256")
+    .update(text + start)
+    .digest("hex");
+}
+
+function loadStored(): StoredMessage[] {
+  if (!fs.existsSync(STORAGE_PATH)) return [];
+  return JSON.parse(fs.readFileSync(STORAGE_PATH, "utf-8"));
+}
+
+function saveStored(data: StoredMessage[]) {
+  fs.writeFileSync(STORAGE_PATH, JSON.stringify(data, null, 2));
+}
+
+function isActive(start: string, end: string) {
+  const now = Date.now();
+  return now >= new Date(start).getTime() && now <= new Date(end).getTime();
+}
+
+function getColor(type: string) {
+  switch (type) {
+    case "high":
+      return 0xff3b30; // red
+    case "normal":
+      return 0xffcc00; // yellow
+    default:
+      return 0x5865f2; // blurple
   }
 }
 
-fetchAppalcartUpdates();
+async function fetchAppalcartUpdates() {
+  const res = await fetch(APPALCART_UPDATES);
+  const data = await res.json();
+  return data.get_service_announcements || [];
+}
+
+export async function runAppalcartWatcher() {
+  const announcements = await fetchAppalcartUpdates();
+  const stored = loadStored();
+
+  const newStored: StoredMessage[] = [];
+  const newEmbeds: EmbedBuilder[] = [];
+
+  let shouldPing = false;
+
+  for (const group of announcements) {
+    if (group.type === "normal") continue; // only post high priority
+    for (const ann of group.announcements) {
+      const active = isActive(ann.start, ann.end);
+      const hash = hashAnnouncement(ann.text, ann.start);
+
+      const existing = stored.find((s) => s.hash === hash);
+
+      if (active && !existing) {
+        shouldPing = true;
+
+        const embed = new EmbedBuilder()
+          .setTitle("🚍 AppalCART Service Update")
+          .setDescription(ann.text)
+          .setColor(getColor(group.type))
+          .addFields(
+            {
+              name: "Start",
+              value: `<t:${Math.floor(new Date(ann.start).getTime() / 1000)}:F>`,
+              inline: true,
+            },
+            {
+              name: "End",
+              value: `<t:${Math.floor(new Date(ann.end).getTime() / 1000)}:F>`,
+              inline: true,
+            },
+          )
+          .setFooter({ text: "Source: AppalCART" })
+          .setTimestamp();
+
+        newEmbeds.push(embed);
+
+        newStored.push({
+          id: "", // placeholder until sent
+          hash,
+          end: new Date(ann.end).getTime(),
+        });
+      }
+
+      if (active && existing) {
+        newStored.push(existing);
+      }
+    }
+  }
+
+  // 🚀 SEND (batch + single ping)
+  if (newEmbeds.length > 0) {
+    const message = await webhook.send({
+      content: shouldPing ? `<@&${ROLE_ID}>` : undefined,
+      embeds: newEmbeds,
+    });
+
+    // assign IDs to stored entries
+    newStored.forEach((entry) => {
+      if (!entry.id) entry.id = message.id;
+    });
+
+    console.log(`Sent ${newEmbeds.length} new announcements`);
+  }
+
+  // 🧹 DELETE expired
+  for (const msg of stored) {
+    if (Date.now() > msg.end) {
+      try {
+        await webhook.deleteMessage(msg.id);
+        console.log("Deleted expired message");
+      } catch (err) {
+        console.error("Delete failed:", err);
+      }
+    }
+  }
+
+  saveStored(newStored);
+}
+
+runAppalcartWatcher();
