@@ -62,9 +62,14 @@ function getColor(type: string) {
 }
 
 async function fetchAppalcartUpdates() {
-  const res = await fetch(APPALCART_UPDATES);
-  const data = await res.json();
-  return data.get_service_announcements || [];
+  try {
+    const res = await fetch(APPALCART_UPDATES);
+    const data = await res.json();
+    return data.get_service_announcements || [];
+  } catch (err) {
+    console.error("Failed to fetch AppalCART updates:", err);
+    return [];
+  }
 }
 
 export async function runAppalcartWatcher() {
