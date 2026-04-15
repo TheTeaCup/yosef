@@ -1,3 +1,5 @@
+# planning document 
+
 this will be used to allow users to send a embed via web hook into the the discord server for annoucements
 you will have to login via discord to verify you have permission to send an announcement
 this will also be used for users to apply for access to announce
