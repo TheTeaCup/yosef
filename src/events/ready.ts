@@ -3,6 +3,7 @@ import { ExtendedClient } from "../types/client";
 import { deployRolePanels } from "../utils/deployRolePanel.js";
 import chalk from "chalk";
 import { loadData, updateRulesMessage } from "../utils/rulesEmbed.js";
+import { runAppalcartWatcher } from "../utils/appalcartUpdates";
 
 export default {
   name: Events.ClientReady,
@@ -25,6 +26,8 @@ export default {
     } catch (err) {
       console.error("Failed to update rules:", err);
     }
+
+    setInterval(runAppalcartWatcher, 60 * 1000);
 
     const statuses: {
       name: string;
@@ -65,6 +68,11 @@ export default {
         name: "Have you check out Mountaineer Craft?",
         type: ActivityType.Playing,
         status: "online",
+      },
+      {
+        name: "Laying in a hammock on Sanford Mall",
+        type: ActivityType.Playing,
+        status: "idle",
       },
     ];
 
