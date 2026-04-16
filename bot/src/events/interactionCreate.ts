@@ -1,7 +1,7 @@
 import { Interaction, Events } from "discord.js";
 import { handleButton } from "../handlers/buttonHandler.js";
 import handleCommand from "../handlers/commandHandler.js";
-import { ExtendedClient } from "../types/client";
+import { ExtendedClient } from "../types/client.js";
 
 export default {
   name: Events.InteractionCreate,
