@@ -4,15 +4,11 @@ import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 
 export default function Login() {
     const loginWithDiscord = () => {
-        const state = crypto.randomUUID();
-        sessionStorage.setItem("discord_oauth_state", state);
-    
         const params = new URLSearchParams({
           client_id: "1489747568908042390",
           response_type: "code",
           redirect_uri: "http://localhost:3000/callback",
-          scope: "identify guilds email",
-          state,
+          scope: "identify guilds email guilds.members.read"
         });
     
         window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;

@@ -2,11 +2,13 @@ import { Flex, Box, Heading, Spinner } from "@chakra-ui/react";
 import Head from "next/head";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
+import JoinDiscord from "@/components/join-discord";
 
 export default function OAuthDiscord() {
   const router = useRouter();
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<boolean | null>(null);
+  const [joinOurDiscord, setJoinOurDiscord] = useState(false);
 
   useEffect(() => {
     if (!router.isReady) return;
@@ -26,7 +28,7 @@ export default function OAuthDiscord() {
     }
 
     // Call API
-    fetch("https://api./discord-callback", {
+    fetch("http://localhost:3001/auth/callback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),
@@ -42,19 +44,26 @@ export default function OAuthDiscord() {
         return res.json();
       })
       .then((data) => {
+        console.log(data);
         // Store JWT token in sessionStorage or localStorage
         if (data.token) {
           sessionStorage.setItem("auth_token", data.token);
+          setMessage("Login successful! Redirecting...");
+          setTimeout(() => router.push("/"), 1500);
         }
 
-        setMessage("Login successful! Redirecting...");
-        setTimeout(() => router.push("/"), 1500);
+        if (data.error === "joinGuild") {
+          setJoinOurDiscord(true);
+        }
+        
       })
       .catch(() => {
         setMessage("Discord authentication failed.");
         setError(true);
       });
   }, [router.isReady, router.query, router]);
+
+  if (joinOurDiscord) return <JoinDiscord />;
 
   return (
     <>
