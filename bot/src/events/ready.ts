@@ -65,7 +65,7 @@ export default {
         status: "online",
       },
       {
-        name: "Have you check out Mountaineer Craft?",
+        name: "Have you checked out Mountaineer Craft?",
         type: ActivityType.Playing,
         status: "online",
       },
