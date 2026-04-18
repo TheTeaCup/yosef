@@ -55,7 +55,6 @@ export default function OAuthDiscord() {
         if (data.error === "joinGuild") {
           setJoinOurDiscord(true);
         }
-        
       })
       .catch(() => {
         setMessage("Discord authentication failed.");

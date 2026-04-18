@@ -71,14 +71,11 @@ export default function Home() {
 
   if (!appalcartPerm) return <Unauthorized />;
 
-
   return (
     <>
       <Head>
         <title>AppalCART Update - Yosef</title>
-        
       </Head>
-
     </>
   );
 }

@@ -7,16 +7,12 @@ export default function Logout() {
   const router = useRouter();
 
   useEffect(() => {
-    // Remove JWT from storage
     sessionStorage.removeItem("auth_token");
-
-    // Optionally remove other user info
     sessionStorage.removeItem("user");
 
     router.replace("/");
   }, [router]);
 
-  
   return (
     <>
       <Head>

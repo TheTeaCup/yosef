@@ -18,14 +18,14 @@ export default function Home() {
 
   useEffect(() => {
     const token = sessionStorage.getItem("auth_token");
-  
+
     const verifyToken = async () => {
       if (!token) {
         setLoading(false);
         setNeedLogin(true);
         return;
       }
-  
+
       try {
         const res = await fetch("http://localhost:3001/auth/valid-token", {
           method: "POST",
@@ -34,18 +34,18 @@ export default function Home() {
           },
           body: JSON.stringify({ token }),
         });
-  
+
         const data = await res.json();
-  
+
         if (data.valid) {
           setNeedLogin(false);
-            if (!data.user.guildAccess) {
-                router.push("/");
-            } else {
-              setUser(data.user);
-              console.log(data.user);
-              setEventsPerm(data.user.eventsRole);
-            }
+          if (!data.user.guildAccess) {
+            router.push("/");
+          } else {
+            setUser(data.user);
+            console.log(data.user);
+            setEventsPerm(data.user.eventsRole);
+          }
         } else {
           sessionStorage.removeItem("auth_token");
           setNeedLogin(true);
@@ -58,7 +58,7 @@ export default function Home() {
         setLoading(false);
       }
     };
-  
+
     verifyToken();
   }, [router]);
 
@@ -73,21 +73,19 @@ export default function Home() {
   return (
     <>
       <Head>
-            <title>Event Announcement - Yosef</title>
-          </Head>
-          <Flex
-            minH="100vh"
-            align="center"
-            justify="center"
-            bg="gray.900"
-            color="white"
-            px={6}
-            textAlign="center"
-          >
-            <Box>
-                event annoucement
-            </Box>
-          </Flex>
+        <title>Event Announcement - Yosef</title>
+      </Head>
+      <Flex
+        minH="100vh"
+        align="center"
+        justify="center"
+        bg="gray.900"
+        color="white"
+        px={6}
+        textAlign="center"
+      >
+        <Box>event annoucement</Box>
+      </Flex>
     </>
   );
 }

@@ -13,13 +13,7 @@ export default function Unauthorized() {
   };
 
   return (
-    <Flex
-      minH="100vh"
-      align="center"
-      justify="center"
-      bg="gray.900"
-      px={4}
-    >
+    <Flex minH="100vh" align="center" justify="center" bg="gray.900" px={4}>
       <Box
         maxW="lg"
         w="full"
@@ -35,8 +29,8 @@ export default function Unauthorized() {
         </Heading>
 
         <Text fontSize="md" color="gray.300" mb={4}>
-          You do not have permission to view this page. Your account may be missing
-          the required role or access level.
+          You do not have permission to view this page. Your account may be
+          missing the required role or access level.
         </Text>
 
         <Text fontSize="sm" color="gray.400" mb={6}>
