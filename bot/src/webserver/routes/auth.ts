@@ -46,6 +46,9 @@ router.post('/callback', async (req: Request, res: Response) => {
 
         // 3. Check guild membership
         let isInGuild = false;
+        let eventsRole = false;
+        let serverAnnoucements = false;
+        let appalcartAnnoucements = false;
 
         try {
             const guildMemberResponse = await axios.get(
@@ -59,7 +62,12 @@ router.post('/callback', async (req: Request, res: Response) => {
 
             if (guildMemberResponse.data?.user?.id) {
                 isInGuild = true;
+                eventsRole = guildMemberResponse.data?.roles?.includes("1494046051487973436") ?? false;
+                serverAnnoucements = guildMemberResponse.data?.roles?.includes("1489745777319477359") ?? false;
+                appalcartAnnoucements = guildMemberResponse.data?.roles?.includes("1489745777319477359") ?? false;
             }
+
+            
         } catch (err) {
             console.log(err);
             isInGuild = false;
@@ -75,9 +83,12 @@ router.post('/callback', async (req: Request, res: Response) => {
         const token = jwt.sign(
             {
                 id: user.id,
-                username: user.username,
+                username: user.global_name || user.username,
                 avatar: user.avatar,
                 guildAccess: true,
+                eventsRole,
+                serverAnnoucements,
+                appalcartAnnoucements,
             },
             config.JWT_SECRET,
             { expiresIn: '1d' }

@@ -29,6 +29,7 @@ export default function Login() {
             textAlign="center"
           >
             <Box>
+            <Heading>Welcome to the AppState Discord Annoucements Portal</Heading>
               <Heading>To continue you need to login with Discord</Heading>
               <br/>
               <Button
