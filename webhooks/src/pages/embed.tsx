@@ -119,17 +119,17 @@ export default function EmbedBuilder() {
         color: "#5865f2",
         footer: {
           text: "Footer Text",
-          icon_url: "https://cdn.discordapp.com/embed/avatars/0.png",
+          icon_url: "https://cdn.discordapp.com/embed/avatars/2.png",
         },
         author: {
           name: "Author Name",
           icon_url: "https://cdn.discordapp.com/embed/avatars/0.png",
         },
         image: {
-          url: "https://glitchii.github.io/embedbuilder/assets/media/banner.png",
+          url: "https://cdn.discordapp.com/embed/avatars/3.png",
         },
         thumbnail: {
-          url: "https://cdn.discordapp.com/embed/avatars/0.png",
+          url: "https://cdn.discordapp.com/embed/avatars/5.png",
         },
         url: "https://engage.appstate.edu",
         fields: [] as Field[],
