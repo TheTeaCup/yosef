@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { config } from "./config.js";
 import Logger from "./utils/logger.js";
 import { ExtendedClient } from "./types/client.js";
+import "./webserver/index.js";
 
 Logger.start();
 
