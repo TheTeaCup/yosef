@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Loading from "@/components/loading";
 import Login from "@/components/login";
-import JoinDiscord from "@/components/join-discord";
 import Unauthorized from "@/components/unauthorized";
+import EmbedBuilder from "@/components/embedBuilder";
+import { Embed, EmbedField } from "@/types/embed";
 
 export default function Home() {
   const router = useRouter();
@@ -79,22 +80,30 @@ export default function Home() {
 
   if (!serverPerm) return <Unauthorized />;
 
+  const serverEmbed: Embed = {
+    type: "server",
+    content: "@AppalCART Role",
+    embeds: [
+      {
+        title: "AppalCART Update",
+        description:
+          "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
+        color: "#5865f2",
+        thumbnail: {
+          url: "/appalcart.png",
+        },
+        url: "https://appalcart.com",
+        fields: [] as EmbedField[],
+      },
+    ],
+  }
+
   return (
     <>
       <Head>
         <title>Home - Yosef</title>
       </Head>
-      <Flex
-        minH="100vh"
-        align="center"
-        justify="center"
-        bg="gray.900"
-        color="white"
-        px={6}
-        textAlign="center"
-      >
-        server annoucement
-      </Flex>
+      <EmbedBuilder defaultEmbed={serverEmbed}/>
     </>
   );
 }

@@ -5,7 +5,8 @@ import { useRouter } from "next/router";
 import Loading from "@/components/loading";
 import Login from "@/components/login";
 import Unauthorized from "@/components/unauthorized";
-import Script from "next/script";
+import EmbedBuilder from "@/components/embedBuilder";
+import { Embed, EmbedField } from "@/types/embed";
 
 export default function Home() {
   const router = useRouter();
@@ -71,11 +72,30 @@ export default function Home() {
 
   if (!appalcartPerm) return <Unauthorized />;
 
+  const appalcartEmbed: Embed = {
+    type: "appalcart",
+    content: "@AppalCART Role",
+    embeds: [
+      {
+        title: "AppalCART Update",
+        description:
+          "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
+        color: "#5865f2",
+        thumbnail: {
+          url: "https://appstate-discord.pages.dev/appalcart.png",
+        },
+        url: "https://appalcart.com",
+        fields: [] as EmbedField[],
+      },
+    ],
+  }
+
   return (
     <>
       <Head>
         <title>AppalCART Update - Yosef</title>
       </Head>
+      <EmbedBuilder defaultEmbed={appalcartEmbed} />
     </>
   );
 }

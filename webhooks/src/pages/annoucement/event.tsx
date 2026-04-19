@@ -5,6 +5,8 @@ import { useRouter } from "next/router";
 import Loading from "@/components/loading";
 import Login from "@/components/login";
 import Unauthorized from "@/components/unauthorized";
+import EmbedBuilder from "@/components/embedBuilder";
+import { Embed, EmbedField } from "@/types/embed";
 
 export default function Home() {
   const router = useRouter();
@@ -70,22 +72,27 @@ export default function Home() {
 
   if (!eventsPerm) return <Unauthorized />;
 
+  const eventEmbed: Embed = {
+    type:"event",
+    content: "@Events Role",
+    embeds: [
+      {
+        title: "Upcoming Event",
+        description:
+          "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
+        color: "#5865f2",
+        url: "https://instagram.com",
+        fields: [] as EmbedField[],
+      },
+    ],
+  }
+
   return (
     <>
       <Head>
         <title>Event Announcement - Yosef</title>
       </Head>
-      <Flex
-        minH="100vh"
-        align="center"
-        justify="center"
-        bg="gray.900"
-        color="white"
-        px={6}
-        textAlign="center"
-      >
-        <Box>event annoucement</Box>
-      </Flex>
+      <EmbedBuilder defaultEmbed={eventEmbed} />
     </>
   );
 }
