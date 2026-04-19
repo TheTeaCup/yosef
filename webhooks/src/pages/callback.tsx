@@ -28,7 +28,7 @@ export default function OAuthDiscord() {
     }
 
     // Call API
-    fetch("http://localhost:3001/auth/callback", {
+    fetch("https://yosef-api.hunterwilson.dev/auth/callback", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),

@@ -8,11 +8,17 @@ export default function JoinDiscord() {
   };
 
   const loginWithDiscord = () => {
+    const redirectUri =
+      typeof window !== "undefined"
+        ? `${window.location.origin}/callback`
+        : "http://localhost:3000/callback";
+
     const params = new URLSearchParams({
       client_id: "1489747568908042390",
       response_type: "code",
-      redirect_uri: "http://localhost:3000/callback",
+      redirect_uri: redirectUri,
       scope: "identify guilds email guilds.members.read",
+      prompt: "none",
     });
 
     window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;

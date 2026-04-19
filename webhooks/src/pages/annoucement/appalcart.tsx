@@ -29,13 +29,16 @@ export default function Home() {
       }
 
       try {
-        const res = await fetch("http://localhost:3001/auth/valid-token", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
+        const res = await fetch(
+          "https://yosef-api.hunterwilson.dev/auth/valid-token",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ token }),
           },
-          body: JSON.stringify({ token }),
-        });
+        );
 
         const data = await res.json();
 
@@ -88,7 +91,7 @@ export default function Home() {
         fields: [] as EmbedField[],
       },
     ],
-  }
+  };
 
   return (
     <>

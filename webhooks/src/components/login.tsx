@@ -14,7 +14,7 @@ export default function Login() {
       response_type: "code",
       redirect_uri: redirectUri,
       scope: "identify guilds email guilds.members.read",
-  prompt: "none",
+      prompt: "none",
     });
 
     window.location.href = `https://discord.com/oauth2/authorize?${params.toString()}`;

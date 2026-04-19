@@ -1,46 +1,43 @@
 type EmbedField = {
-    name: string;
-    value: string;
-    inline: boolean;
+  name: string;
+  value: string;
+  inline: boolean;
 };
 
 type Embed = {
-    content?: string;
-    type?: "event" | "appalcart" | "server";
-    embeds: {
-        title?: string;
+  content?: string;
+  type?: "event" | "appalcart" | "server";
+  embeds: {
+    title?: string;
 
-        description?: string;
-        color?: string;
+    description?: string;
+    color?: string;
 
-        url?: string;
+    url?: string;
 
-        author?: {
-            name?: string;
-            icon_url?: string;
-            url?: string;
-        };
+    author?: {
+      name?: string;
+      icon_url?: string;
+      url?: string;
+    };
 
-        footer?: {
-            text?: string;
-            icon_url?: string;
-        };
+    footer?: {
+      text?: string;
+      icon_url?: string;
+    };
 
-        thumbnail?: {
-            url: string;
-        };
+    thumbnail?: {
+      url: string;
+    };
 
-        image?: {
-            url: string;
-        };
+    image?: {
+      url: string;
+    };
 
-        timestamp?: string;
+    timestamp?: string;
 
-        fields?: EmbedField[];
-    }[];
+    fields?: EmbedField[];
+  }[];
 };
 
-export {
-    type EmbedField,
-    type Embed
-}
+export { type EmbedField, type Embed };
