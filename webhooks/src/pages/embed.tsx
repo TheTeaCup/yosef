@@ -206,7 +206,7 @@ export default function EmbedBuilder() {
   const e = embed.embeds[0];
 
   return (
-    <HStack align="start" p={6} bg="gray.900" minH="100vh">
+    <HStack align="start" p={6} bg="gray.900" color={"white"} minH="100vh">
       {/* LEFT: Editor */}
       <VStack w="50%" gap={3} align="stretch">
         <Text fontSize="xl" fontWeight="bold" color="white">
