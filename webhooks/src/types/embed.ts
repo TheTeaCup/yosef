@@ -5,13 +5,13 @@ type EmbedField = {
 };
 
 type Embed = {
-    content: string;
-    type: "event" | "appalcart" | "server" | "default";
+    content?: string;
+    type?: "event" | "appalcart" | "server";
     embeds: {
-        title: string;
+        title?: string;
 
-        description: string;
-        color: string;
+        description?: string;
+        color?: string;
 
         url?: string;
 
@@ -36,7 +36,7 @@ type Embed = {
 
         timestamp?: string;
 
-        fields: EmbedField[];
+        fields?: EmbedField[];
     }[];
 };
 

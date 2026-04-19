@@ -82,17 +82,13 @@ export default function Home() {
 
   const serverEmbed: Embed = {
     type: "server",
-    content: "@AppalCART Role",
+    content: "@server updates",
     embeds: [
       {
-        title: "AppalCART Update",
+        title: "Server Update",
         description:
           "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
-        color: "#5865f2",
-        thumbnail: {
-          url: "/appalcart.png",
-        },
-        url: "https://appalcart.com",
+        color: "#ffcc00",
         fields: [] as EmbedField[],
       },
     ],
@@ -101,7 +97,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>Home - Yosef</title>
+        <title>Server Update - Yosef</title>
       </Head>
       <EmbedBuilder defaultEmbed={serverEmbed}/>
     </>

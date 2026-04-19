@@ -80,7 +80,7 @@ export default function Home() {
         title: "Upcoming Event",
         description:
           "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
-        color: "#5865f2",
+        color: "#e67e22",
         url: "https://instagram.com",
         fields: [] as EmbedField[],
       },

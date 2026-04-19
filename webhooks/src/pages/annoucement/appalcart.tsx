@@ -80,7 +80,7 @@ export default function Home() {
         title: "AppalCART Update",
         description:
           "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
-        color: "#5865f2",
+        color: "#f12b2b",
         thumbnail: {
           url: "https://appstate-discord.pages.dev/appalcart.png",
         },

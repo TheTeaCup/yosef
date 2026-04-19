@@ -71,32 +71,7 @@ import {
   export default function EmbedBuilder({ defaultEmbed }: { defaultEmbed?: Embed }) {
     const router = useRouter();
     const [embed, setEmbed] = useState<Embed>({
-      type: "default",
-      content: "Message outside of the Embed",
-      embeds: [
-        {
-          title: "Title of Embed",
-          description:
-            "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~\nEvent Social Link: [Click Here](https://engage.appstate.edu)",
-          color: "#5865f2",
-          footer: {
-            text: "Footer Text",
-            icon_url: "https://cdn.discordapp.com/embed/avatars/2.png",
-          },
-          author: {
-            name: "Author Name",
-            icon_url: "https://cdn.discordapp.com/embed/avatars/0.png",
-          },
-          image: {
-            url: "https://cdn.discordapp.com/embed/avatars/3.png",
-          },
-          thumbnail: {
-            url: "https://cdn.discordapp.com/embed/avatars/5.png",
-          },
-          url: "https://engage.appstate.edu",
-          fields: [] as EmbedField[],
-        },
-      ],
+      embeds: [],
     });
 
     useEffect(() => {
@@ -129,7 +104,7 @@ import {
           {
             ...prev.embeds[0],
             fields: [
-              ...prev.embeds[0].fields,
+              ...(prev?.embeds[0].fields || []),
               { name: "Field", value: "Value", inline: false },
             ],
           },
@@ -142,7 +117,7 @@ import {
       key: keyof EmbedField,
       value: string | boolean,
     ) => {
-      const fields = [...embed.embeds[0].fields];
+      const fields = [...(embed.embeds[0].fields || [])];
       fields[index] = { ...fields[index], [key]: value };
   
       setEmbed({
@@ -152,7 +127,7 @@ import {
     };
   
     const removeField = (index: number) => {
-      const fields = embed.embeds[0].fields.filter((_, i) => i !== index);
+      const fields = embed.embeds[0]?.fields?.filter((_, i) => i !== index) || [];
       setEmbed({
         ...embed,
         embeds: [{ ...embed.embeds[0], fields }],
@@ -163,7 +138,10 @@ import {
       await fetch("http://localhost:3001/webhook/" + embed.type, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(embed),
+        body: JSON.stringify({
+          embed: embed,
+          token: sessionStorage.getItem("auth_token"),
+        }),
       });
     };
   
@@ -200,7 +178,7 @@ import {
           <Field.Root>
             <Field.Label>Author Name</Field.Label>
             <Input
-              defaultValue={e.author?.name}
+              defaultValue={e?.author?.name}
               onChange={(e) => updateEmbed("author.name", e.target.value)}
             />
           </Field.Root>
@@ -208,7 +186,7 @@ import {
           <Field.Root>
             <Field.Label>Author Icon URL</Field.Label>
             <Input
-              defaultValue={e.author?.icon_url}
+              defaultValue={e?.author?.icon_url}
               onChange={(e) => updateEmbed("author.icon_url", e.target.value)}
             />
           </Field.Root>
@@ -218,7 +196,7 @@ import {
               Title <Field.RequiredIndicator />
             </Field.Label>
             <Input
-              defaultValue={e.title}
+              defaultValue={e?.title}
               onChange={(e) => updateEmbed("title.text", e.target.value)}
             />
           </Field.Root>
@@ -228,7 +206,7 @@ import {
               Embed URL <Field.RequiredIndicator />
             </Field.Label>
             <Input
-              defaultValue={e.url}
+              defaultValue={e?.url}
               onChange={(e) => updateEmbed("url", e.target.value)}
             />
           </Field.Root>
@@ -236,7 +214,7 @@ import {
           <Field.Root>
             <Field.Label>Description</Field.Label>
             <Textarea
-              defaultValue={e.description}
+              defaultValue={e?.description}
               onChange={(e) => updateEmbed("description", e.target.value)}
               autoresize
             />
@@ -245,7 +223,7 @@ import {
           <Field.Root>
             <Field.Label>Thumbnail URL</Field.Label>
             <Input
-              defaultValue={e.thumbnail?.url}
+              defaultValue={e?.thumbnail?.url}
               onChange={(e) => updateEmbed("thumbnail.url", e.target.value)}
             />
           </Field.Root>
@@ -253,7 +231,7 @@ import {
           <Field.Root>
             <Field.Label>Image URL</Field.Label>
             <Input
-              defaultValue={e.image?.url}
+              defaultValue={e?.image?.url}
               onChange={(e) => updateEmbed("image.url", e.target.value)}
             />
           </Field.Root>
@@ -261,7 +239,7 @@ import {
           <Field.Root>
             <Field.Label>Footer Text</Field.Label>
             <Input
-              defaultValue={e.footer?.text}
+              defaultValue={e?.footer?.text}
               onChange={(e) => updateEmbed("footer.text", e.target.value)}
             />
           </Field.Root>
@@ -269,7 +247,7 @@ import {
           <Field.Root>
             <Field.Label>Footer Icon URL</Field.Label>
             <Input
-              defaultValue={e.footer?.icon_url}
+              defaultValue={e?.footer?.icon_url}
               onChange={(e) => updateEmbed("footer.icon_url", e.target.value)}
             />
           </Field.Root>
@@ -278,7 +256,7 @@ import {
             <Field.Label>Embed Color</Field.Label>
             <Input
               type="color"
-              defaultValue={e.color}
+              defaultValue={e?.color}
               onChange={(e) =>
                 updateEmbed(
                   "color",
@@ -292,7 +270,7 @@ import {
             + Add Field
           </Button>
   
-          {e.fields.map((f, i) => (
+          {(e?.fields ?? []).map((f, i) => (
             <Box key={i} p={3} bg="gray.800" borderRadius="md">
               <Input
                 placeholder="Field Name"
@@ -344,11 +322,7 @@ import {
   
           <Box
             borderLeft="4px solid"
-            borderColor={
-              e.color.startsWith("#")
-                ? e.color
-                : `#${Number(e.color).toString(16).padStart(6, "0")}`
-            }
+            borderColor={e?.color ? e.color : "gray.600"}
             bg="#2b2d31"
             p={4}
             borderRadius="md"
@@ -356,7 +330,7 @@ import {
             fontSize="sm"
             lineHeight="1.35"
           >
-            {e.author?.name && (
+            {e?.author?.name && (
               <HStack mb={2}>
                 {e.author.icon_url && (
                   <img
@@ -372,7 +346,7 @@ import {
               </HStack>
             )}
   
-            {e.thumbnail?.url && (
+            {e?.thumbnail?.url && (
               <Box float="right" ml={3} mt={1}>
                 <img
                   src={e.thumbnail.url}
@@ -383,7 +357,7 @@ import {
               </Box>
             )}
   
-            {e.title && (
+            {e?.title && (
               <Text fontSize="md" fontWeight="700" mb={2}>
                 {e.url ? (
                   <a href={e.url} style={{ color: "#00a8fc" }} target="_blank">
@@ -395,20 +369,20 @@ import {
               </Text>
             )}
   
-            {e.description && (
+            {e?.description && (
               <Box mb={2}>
                 <MarkdownPreview content={e.description} />
               </Box>
             )}
   
-            {e.fields.length > 0 && (
+            {(e?.fields ?? []).length > 0 && (
               <Box
                 mt={3}
                 display="grid"
                 gridTemplateColumns="repeat(3, 1fr)"
                 gap={3}
               >
-                {e.fields.map((f, i) => (
+                {(e?.fields ?? []).map((f, i) => (
                   <Box key={i}>
                     <Text fontWeight="700" fontSize="sm">
                       {f.name}
@@ -421,7 +395,7 @@ import {
               </Box>
             )}
   
-            {e.image?.url && (
+            {e?.image?.url && (
               <Box mt={2}>
                 <img
                   src={e.image.url}
@@ -437,7 +411,7 @@ import {
               </Box>
             )}
   
-            {e.footer?.text && (
+            {e?.footer?.text && (
               <HStack mt={3}>
                 {e.footer.icon_url && (
                   <img
