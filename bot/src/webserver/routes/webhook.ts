@@ -178,7 +178,7 @@ router.post("/", requireAuth, async (req, res) => {
   }
 
   // send to admin discord channel on who sent the webhook and what the content was for logging purposes
-  await fetch(config.DISCORD_MOD_LOGS!, {
+  await fetch(config.DISCORD_LOG_WEBHOOK_URL!, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
