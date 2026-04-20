@@ -2,7 +2,6 @@ import { Router } from "express";
 import { requireAuth } from "../middleware/requireAuth.js";
 import jwt from "jsonwebtoken";
 import { config } from "../../config.js";
-import { time } from "console";
 
 const router = Router();
 
@@ -146,8 +145,6 @@ router.post("/", requireAuth, async (req, res) => {
     embeds,
   };
 
-  console.log("Sending to Discord:", JSON.stringify(payload, null, 2));
-
   const discordRes = await fetch(DISCORD_WEBHOOKS[type], {
     method: "POST",
     headers: {
@@ -163,8 +160,6 @@ router.post("/", requireAuth, async (req, res) => {
   } catch {
     discordData = null;
   }
-
-  console.log(discordRes);
 
   if (!discordRes.ok) {
     return res.status(discordRes.status).json({
