@@ -31,7 +31,7 @@ export default function StaffApplication() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ token }),
-          }
+          },
         );
 
         const data = await res.json();
@@ -92,22 +92,22 @@ export default function StaffApplication() {
             your application and get back to you as soon as possible.
           </Box>
           <Box>
-          <Field.Root required>
-            <Field.Label>
-              Email <Field.RequiredIndicator />
-            </Field.Label>
-            <Input placeholder="Enter your email" />
-            <Field.HelperText>Provide an @appstate.edu email</Field.HelperText>
-          </Field.Root>
+            <Field.Root required>
+              <Field.Label>
+                Email <Field.RequiredIndicator />
+              </Field.Label>
+              <Input placeholder="Enter your email" />
+              <Field.HelperText>
+                Provide an @appstate.edu email
+              </Field.HelperText>
+            </Field.Root>
 
-          <Field.Root mt={5} required>
-            <Field.Label>
-              Name <Field.RequiredIndicator />
-            </Field.Label>
-            <Input placeholder="Enter your name" />
-          </Field.Root>
-
-          
+            <Field.Root mt={5} required>
+              <Field.Label>
+                Name <Field.RequiredIndicator />
+              </Field.Label>
+              <Input placeholder="Enter your name" />
+            </Field.Root>
           </Box>
         </Box>
       </Flex>

@@ -31,7 +31,7 @@ export default function EventCoordinator() {
               "Content-Type": "application/json",
             },
             body: JSON.stringify({ token }),
-          }
+          },
         );
 
         const data = await res.json();
@@ -80,7 +80,7 @@ export default function EventCoordinator() {
       >
         <Box maxW="2xl">
           <Box fontSize="4xl" fontWeight="bold" mb={4}>
-            Announcement Application
+            Event Coordinator Application
           </Box>
           <Box fontSize="lg" mb={6}>
             Thank you for your interest in becoming an announcer for our server!
@@ -92,28 +92,32 @@ export default function EventCoordinator() {
             your application and get back to you as soon as possible.
           </Box>
           <Box>
-          <Field.Root required>
-            <Field.Label>
-              Email <Field.RequiredIndicator />
-            </Field.Label>
-            <Input placeholder="Enter your email" />
-            <Field.HelperText>Provide an @appstate.edu email</Field.HelperText>
-          </Field.Root>
+            <Field.Root required>
+              <Field.Label>
+                Email <Field.RequiredIndicator />
+              </Field.Label>
+              <Input placeholder="Enter your email" />
+              <Field.HelperText>
+                Provide an @appstate.edu email
+              </Field.HelperText>
+            </Field.Root>
 
-          <Field.Root mt={5} required>
-            <Field.Label>
-              Name <Field.RequiredIndicator />
-            </Field.Label>
-            <Input placeholder="Enter your name" />
-          </Field.Root>
+            <Field.Root mt={5} required>
+              <Field.Label>
+                Name <Field.RequiredIndicator />
+              </Field.Label>
+              <Input placeholder="Enter your name" />
+            </Field.Root>
 
-          <Field.Root mt={5} required>
-            <Field.Label>
-              Organization <Field.RequiredIndicator />
-            </Field.Label>
-            <Input placeholder="Example: APPS" />
-            <Field.HelperText>What organization will you be posting for?</Field.HelperText>
-          </Field.Root>
+            <Field.Root mt={5} required>
+              <Field.Label>
+                Organization <Field.RequiredIndicator />
+              </Field.Label>
+              <Input placeholder="Example: APPS" />
+              <Field.HelperText>
+                What organization will you be posting for?
+              </Field.HelperText>
+            </Field.Root>
           </Box>
         </Box>
       </Flex>
