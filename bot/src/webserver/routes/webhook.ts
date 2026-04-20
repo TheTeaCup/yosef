@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireAuth } from "../middleware/requireAuth.js";
 import jwt from "jsonwebtoken";
 import { config } from "../../config.js";
+import { time } from "console";
 
 const router = Router();
 
@@ -180,6 +181,24 @@ router.post("/", requireAuth, async (req, res) => {
       retryAfter: discordData?.retry_after,
     });
   }
+
+  // send to admin discord channel on who sent the webhook and what the content was for logging purposes
+  await fetch(config.DISCORD_MOD_LOGS!, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      embeds: [
+        {
+          title: `Webhook Destination: ${type}`,
+          description: `Webhook sent by <@${decoded.id}> (${decoded.id})`,
+          color: 0x00ff00,
+          timestamp: new Date().toISOString(),
+        },
+      ],
+    }),
+  });
 
   return res.json({
     error: false,
