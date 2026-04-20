@@ -189,7 +189,6 @@ router.post("/", requireAuth, async (req, res) => {
           title: `Webhook Destination: ${type}`,
           description: `Webhook sent by <@${decoded.id}> (${decoded.id})`,
           color: 0x00ff00,
-          timestamp: new Date().toISOString(),
         },
       ],
     }),
