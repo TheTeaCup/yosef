@@ -38,6 +38,10 @@ export default function Unauthorized() {
           or administrator for assistance.
         </Text>
 
+        <Button onClick={() => redirect("/applications/event-coordinator.tsx")}>
+          Apply for Access
+        </Button>
+
         <Button
           bg="#5865F2"
           color="white"

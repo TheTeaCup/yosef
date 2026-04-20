@@ -8,7 +8,7 @@ import Unauthorized from "@/components/unauthorized";
 import EmbedBuilder from "@/components/embedBuilder";
 import { Embed, EmbedField } from "@/types/embed";
 
-export default function Home() {
+export default function Server() {
   const router = useRouter();
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -46,7 +46,6 @@ export default function Home() {
             router.push("/");
           } else {
             setUser(data.user);
-            console.log(data.user);
             setServerPerm(data.user.serverAnnoucements);
           }
         } else {
@@ -64,14 +63,6 @@ export default function Home() {
 
     verifyToken();
   }, [router]);
-
-  interface RedirectFunction {
-    (path: string): void;
-  }
-
-  const redirect: RedirectFunction = (path: string) => {
-    router.push(path);
-  };
 
   if (loading) return <Loading />;
 
