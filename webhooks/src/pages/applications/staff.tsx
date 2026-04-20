@@ -80,16 +80,10 @@ export default function StaffApplication() {
       >
         <Box maxW="2xl">
           <Box fontSize="4xl" fontWeight="bold" mb={4}>
-            Announcement Application
+            Staff Application
           </Box>
           <Box fontSize="lg" mb={6}>
-            Thank you for your interest in becoming an announcer for our server!
-            We are looking for dedicated individuals to help keep our community
-            informed about upcoming events and news.
-          </Box>
-          <Box fontSize="lg" mb={6}>
-            To apply, please fill out the application form below. We will review
-            your application and get back to you as soon as possible.
+            la la la la la
           </Box>
           <Box>
             <Field.Root required>
