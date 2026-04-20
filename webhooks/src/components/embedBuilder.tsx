@@ -15,6 +15,7 @@ import remarkBreaks from "remark-breaks";
 import { useEffect, useState } from "react";
 import { Embed, EmbedField } from "@/types/embed";
 import { useRouter } from "next/router";
+import { Toaster, toaster } from "@/components/ui/toaster";
 
 function preprocessDiscord(text: string): string {
   return text
@@ -77,6 +78,7 @@ export default function EmbedBuilder({
   const [embed, setEmbed] = useState<Embed>({
     embeds: [],
   });
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     if (defaultEmbed) {
@@ -139,14 +141,46 @@ export default function EmbedBuilder({
   };
 
   const sendEmbed = async () => {
-    await fetch("https://yosef-api.hunterwilson.dev/webhook/" + embed.type, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        embed: embed,
-        token: sessionStorage.getItem("auth_token"),
-      }),
-    });
+    try {
+      setSubmitting(true);
+      let embedResponse = await fetch(
+        "https://yosef-api.hunterwilson.dev/webhook/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            embed: embed,
+            token: sessionStorage.getItem("auth_token"),
+          }),
+        },
+      );
+      const data = await embedResponse.json();
+
+      if (embedResponse) {
+        setSubmitting(false);
+
+        if (embedResponse.ok) {
+          toaster.create({
+            description: data.message,
+            type: "success",
+            closable: true,
+          });
+        } else {
+          toaster.create({
+            description: data.details?.join("\n") || data.message,
+            type: "error",
+            closable: true,
+          });
+        }
+      }
+    } catch (err) {
+      toaster.create({
+        description: "An error occurred while sending the embed.",
+        type: "error",
+        closable: true,
+      });
+      setSubmitting(false);
+    }
   };
 
   const copyJSON = () => {
@@ -164,273 +198,282 @@ export default function EmbedBuilder({
   const e = embed.embeds[0];
 
   return (
-    <HStack align="start" p={6} bg="gray.900" color={"white"} minH="100vh">
-      {/* LEFT: Editor */}
-      <VStack w="50%" gap={3} align="stretch">
-        <Text fontSize="xl" fontWeight="bold" color="white">
-          Embed Builder
-        </Text>
+    <>
+      <Toaster />
+      <HStack align="start" p={6} bg="gray.900" color={"white"} minH="100vh">
+        {/* LEFT: Editor */}
+        <VStack w="50%" gap={3} align="stretch">
+          <Text fontSize="xl" fontWeight="bold" color="white">
+            Embed Builder
+          </Text>
 
-        <Field.Root>
-          <Field.Label>Content (message above embed)</Field.Label>
-          <Input
-            defaultValue={embed.content}
-            onChange={(e) => setEmbed({ ...embed, content: e.target.value })}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Author Name</Field.Label>
-          <Input
-            defaultValue={e?.author?.name}
-            onChange={(e) => updateEmbed("author.name", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Author Icon URL</Field.Label>
-          <Input
-            defaultValue={e?.author?.icon_url}
-            onChange={(e) => updateEmbed("author.icon_url", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root required>
-          <Field.Label>
-            Title <Field.RequiredIndicator />
-          </Field.Label>
-          <Input
-            defaultValue={e?.title}
-            onChange={(e) => updateEmbed("title.text", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root required>
-          <Field.Label>
-            Embed URL <Field.RequiredIndicator />
-          </Field.Label>
-          <Input
-            defaultValue={e?.url}
-            onChange={(e) => updateEmbed("url", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Description</Field.Label>
-          <Textarea
-            defaultValue={e?.description}
-            onChange={(e) => updateEmbed("description", e.target.value)}
-            autoresize
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Thumbnail URL</Field.Label>
-          <Input
-            defaultValue={e?.thumbnail?.url}
-            onChange={(e) => updateEmbed("thumbnail.url", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Image URL</Field.Label>
-          <Input
-            defaultValue={e?.image?.url}
-            onChange={(e) => updateEmbed("image.url", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Footer Text</Field.Label>
-          <Input
-            defaultValue={e?.footer?.text}
-            onChange={(e) => updateEmbed("footer.text", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Footer Icon URL</Field.Label>
-          <Input
-            defaultValue={e?.footer?.icon_url}
-            onChange={(e) => updateEmbed("footer.icon_url", e.target.value)}
-          />
-        </Field.Root>
-
-        <Field.Root>
-          <Field.Label>Embed Color</Field.Label>
-          <Input
-            type="color"
-            defaultValue={e?.color}
-            onChange={(e) =>
-              updateEmbed(
-                "color",
-                parseInt(e.target.value.replace("#", ""), 16),
-              )
-            }
-          />
-        </Field.Root>
-
-        <Button onClick={addField} colorPalette="green">
-          + Add Field
-        </Button>
-
-        {(e?.fields ?? []).map((f, i) => (
-          <Box key={i} p={3} bg="gray.800" borderRadius="md">
+          <Field.Root>
+            <Field.Label>Content (message above embed)</Field.Label>
             <Input
-              placeholder="Field Name"
-              value={f.name}
-              onChange={(e) => updateField(i, "name", e.target.value)}
+              defaultValue={embed.content}
+              onChange={(e) => setEmbed({ ...embed, content: e.target.value })}
             />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Author Name</Field.Label>
             <Input
-              placeholder="Field Value"
-              value={f.value}
-              onChange={(e) => updateField(i, "value", e.target.value)}
-              mt={2}
+              defaultValue={e?.author?.name}
+              onChange={(e) => updateEmbed("author.name", e.target.value)}
             />
-            <HStack mt={2}>
-              <Button
-                size="sm"
-                onClick={() => updateField(i, "inline", !f.inline)}
-              >
-                Inline: {f.inline ? "Yes" : "No"}
-              </Button>
+          </Field.Root>
 
-              <Button
-                size="sm"
-                colorPalette="red"
-                onClick={() => removeField(i)}
-              >
-                Remove
-              </Button>
-            </HStack>
-          </Box>
-        ))}
+          <Field.Root>
+            <Field.Label>Author Icon URL</Field.Label>
+            <Input
+              defaultValue={e?.author?.icon_url}
+              onChange={(e) => updateEmbed("author.icon_url", e.target.value)}
+            />
+          </Field.Root>
 
-        <HStack>
-          <Button colorPalette="blue" onClick={sendEmbed}>
-            Send
+          <Field.Root required>
+            <Field.Label>
+              Title <Field.RequiredIndicator />
+            </Field.Label>
+            <Input
+              defaultValue={e?.title}
+              onChange={(e) => updateEmbed("title", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root required>
+            <Field.Label>
+              Embed URL <Field.RequiredIndicator />
+            </Field.Label>
+            <Input
+              defaultValue={e?.url}
+              onChange={(e) => updateEmbed("url", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Description</Field.Label>
+            <Textarea
+              defaultValue={e?.description}
+              onChange={(e) => updateEmbed("description", e.target.value)}
+              autoresize
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Thumbnail URL</Field.Label>
+            <Input
+              defaultValue={e?.thumbnail?.url}
+              onChange={(e) => updateEmbed("thumbnail.url", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Image URL</Field.Label>
+            <Input
+              defaultValue={e?.image?.url}
+              onChange={(e) => updateEmbed("image.url", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Footer Text</Field.Label>
+            <Input
+              defaultValue={e?.footer?.text}
+              onChange={(e) => updateEmbed("footer.text", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Footer Icon URL</Field.Label>
+            <Input
+              defaultValue={e?.footer?.icon_url}
+              onChange={(e) => updateEmbed("footer.icon_url", e.target.value)}
+            />
+          </Field.Root>
+
+          <Field.Root>
+            <Field.Label>Embed Color</Field.Label>
+            <Input
+              type="color"
+              defaultValue={e?.color}
+              onChange={(e) =>
+                updateEmbed(
+                  "color",
+                  parseInt(e.target.value.replace("#", ""), 16),
+                )
+              }
+            />
+          </Field.Root>
+
+          <Button onClick={addField} colorPalette="green">
+            + Add Field
           </Button>
-          <Button colorPalette="red" onClick={() => redirect("/")}>
-            Cancel
-          </Button>
-        </HStack>
-      </VStack>
 
-      {/* RIGHT: Preview */}
-      <Box w="50%" bg="gray.800" p={4} borderRadius="md">
-        <Text color="gray.400" mb={2}>
-          Preview
-        </Text>
-
-        {embed.content && <Text mb={2}>{embed.content}</Text>}
-
-        <Box
-          borderLeft="4px solid"
-          borderColor={e?.color ? e.color : "gray.600"}
-          bg="#2b2d31"
-          p={4}
-          borderRadius="md"
-          maxW="100%"
-          fontSize="sm"
-          lineHeight="1.35"
-        >
-          {e?.author?.name && (
-            <HStack mb={2}>
-              {e.author.icon_url && (
-                <img
-                  src={e.author.icon_url}
-                  width={20}
-                  height={20}
-                  style={{ borderRadius: "50%" }}
-                />
-              )}
-              <Text fontSize="xs" color="gray.300">
-                {e.author.name}
-              </Text>
-            </HStack>
-          )}
-
-          {e?.thumbnail?.url && (
-            <Box float="right" ml={3} mt={1}>
-              <img
-                src={e.thumbnail.url}
-                width={60}
-                height={60}
-                style={{ borderRadius: 6 }}
+          {(e?.fields ?? []).map((f, i) => (
+            <Box key={i} p={3} bg="gray.800" borderRadius="md">
+              <Input
+                placeholder="Field Name"
+                value={f.name}
+                onChange={(e) => updateField(i, "name", e.target.value)}
               />
+              <Input
+                placeholder="Field Value"
+                value={f.value}
+                onChange={(e) => updateField(i, "value", e.target.value)}
+                mt={2}
+              />
+              <HStack mt={2}>
+                <Button
+                  size="sm"
+                  onClick={() => updateField(i, "inline", !f.inline)}
+                >
+                  Inline: {f.inline ? "Yes" : "No"}
+                </Button>
+
+                <Button
+                  size="sm"
+                  colorPalette="red"
+                  onClick={() => removeField(i)}
+                >
+                  Remove
+                </Button>
+              </HStack>
             </Box>
-          )}
+          ))}
 
-          {e?.title && (
-            <Text fontSize="md" fontWeight="700" mb={2}>
-              {e.url ? (
-                <a href={e.url} style={{ color: "#00a8fc" }} target="_blank">
-                  {e.title}
-                </a>
-              ) : (
-                e.title
-              )}
-            </Text>
-          )}
-
-          {e?.description && (
-            <Box mb={2}>
-              <MarkdownPreview content={e.description} />
-            </Box>
-          )}
-
-          {(e?.fields ?? []).length > 0 && (
-            <Box
-              mt={3}
-              display="grid"
-              gridTemplateColumns="repeat(3, 1fr)"
-              gap={3}
+          <HStack>
+            <Button
+              size="lg"
+              loading={submitting}
+              loadingText={"Submitting..."}
+              colorPalette="blue"
+              onClick={sendEmbed}
             >
-              {(e?.fields ?? []).map((f, i) => (
-                <Box key={i}>
-                  <Text fontWeight="700" fontSize="sm">
-                    {f.name}
-                  </Text>
-                  <Text fontSize="sm" color="gray.300" whiteSpace="pre-wrap">
-                    {f.value}
-                  </Text>
-                </Box>
-              ))}
-            </Box>
-          )}
+              Send
+            </Button>
+            <Button size="lg" colorPalette="red" onClick={() => redirect("/")}>
+              Cancel
+            </Button>
+          </HStack>
+        </VStack>
 
-          {e?.image?.url && (
-            <Box mt={2}>
-              <img
-                src={e.image.url}
-                style={{
-                  maxWidth: "100%",
-                  maxHeight: 400,
-                  width: "auto",
-                  height: "auto",
-                  borderRadius: 6,
-                  objectFit: "contain",
-                }}
-              />
-            </Box>
-          )}
+        {/* RIGHT: Preview */}
+        <Box w="50%" bg="gray.800" p={4} borderRadius="md">
+          <Text color="gray.400" mb={2}>
+            Preview
+          </Text>
 
-          {e?.footer?.text && (
-            <HStack mt={3}>
-              {e.footer.icon_url && (
+          {embed.content && <Text mb={2}>{embed.content}</Text>}
+
+          <Box
+            borderLeft="4px solid"
+            borderColor={e?.color ? e.color : "gray.600"}
+            bg="#2b2d31"
+            p={4}
+            borderRadius="md"
+            maxW="100%"
+            fontSize="sm"
+            lineHeight="1.35"
+          >
+            {e?.author?.name && (
+              <HStack mb={2}>
+                {e.author.icon_url && (
+                  <img
+                    src={e.author.icon_url}
+                    width={20}
+                    height={20}
+                    style={{ borderRadius: "50%" }}
+                  />
+                )}
+                <Text fontSize="xs" color="gray.300">
+                  {e.author.name}
+                </Text>
+              </HStack>
+            )}
+
+            {e?.thumbnail?.url && (
+              <Box float="right" ml={3} mt={1}>
                 <img
-                  src={e.footer.icon_url}
-                  width={14}
-                  height={14}
-                  style={{ borderRadius: "50%" }}
+                  src={e.thumbnail.url}
+                  width={60}
+                  height={60}
+                  style={{ borderRadius: 6 }}
                 />
-              )}
+              </Box>
+            )}
 
-              <Text fontSize="xs">{e.footer.text}</Text>
-            </HStack>
-          )}
+            {e?.title && (
+              <Text fontSize="md" fontWeight="700" mb={2}>
+                {e.url ? (
+                  <a href={e.url} style={{ color: "#00a8fc" }} target="_blank">
+                    {e.title}
+                  </a>
+                ) : (
+                  e.title
+                )}
+              </Text>
+            )}
+
+            {e?.description && (
+              <Box mb={2}>
+                <MarkdownPreview content={e.description} />
+              </Box>
+            )}
+
+            {(e?.fields ?? []).length > 0 && (
+              <Box
+                mt={3}
+                display="grid"
+                gridTemplateColumns="repeat(3, 1fr)"
+                gap={3}
+              >
+                {(e?.fields ?? []).map((f, i) => (
+                  <Box key={i}>
+                    <Text fontWeight="700" fontSize="sm">
+                      {f.name}
+                    </Text>
+                    <Text fontSize="sm" color="gray.300" whiteSpace="pre-wrap">
+                      {f.value}
+                    </Text>
+                  </Box>
+                ))}
+              </Box>
+            )}
+
+            {e?.image?.url && (
+              <Box mt={2}>
+                <img
+                  src={e.image.url}
+                  style={{
+                    maxWidth: "100%",
+                    maxHeight: 400,
+                    width: "auto",
+                    height: "auto",
+                    borderRadius: 6,
+                    objectFit: "contain",
+                  }}
+                />
+              </Box>
+            )}
+
+            {e?.footer?.text && (
+              <HStack mt={3}>
+                {e.footer.icon_url && (
+                  <img
+                    src={e.footer.icon_url}
+                    width={14}
+                    height={14}
+                    style={{ borderRadius: "50%" }}
+                  />
+                )}
+
+                <Text fontSize="xs">{e.footer.text}</Text>
+              </HStack>
+            )}
+          </Box>
         </Box>
-      </Box>
-    </HStack>
+      </HStack>
+    </>
   );
 }

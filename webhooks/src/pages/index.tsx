@@ -121,7 +121,7 @@ export default function Home() {
               colorPalette="blue"
               variant="solid"
               disabled={!eventsPerm}
-              onClick={() => redirect("/annoucement/event")}
+              onClick={() => redirect("/announcement/event")}
             >
               Upcoming Event
             </Button>
@@ -129,7 +129,7 @@ export default function Home() {
               colorPalette="red"
               variant="solid"
               disabled={!appalcartPerm}
-              onClick={() => redirect("/annoucement/appalcart")}
+              onClick={() => redirect("/announcement/appalcart")}
             >
               AppalCART Update
             </Button>
@@ -137,7 +137,7 @@ export default function Home() {
               colorPalette="yellow"
               variant="solid"
               disabled={!serverPerm}
-              onClick={() => redirect("/annoucement/server")}
+              onClick={() => redirect("/announcement/server")}
             >
               Server Updates
             </Button>

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -14,9 +14,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [needLogin, setNeedLogin] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // permission states
-  const [appalcartPerm, setAppalcartPerm] = useState(false);
+  const [eventsPerm, setEventsPerm] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("auth_token");
@@ -49,7 +47,7 @@ export default function Home() {
           } else {
             setUser(data.user);
             console.log(data.user);
-            setAppalcartPerm(data.user.appalcartAnnoucements);
+            setEventsPerm(data.user.eventsRole);
           }
         } else {
           sessionStorage.removeItem("auth_token");
@@ -73,21 +71,18 @@ export default function Home() {
 
   if (needLogin) return <Login />;
 
-  if (!appalcartPerm) return <Unauthorized />;
+  if (!eventsPerm) return <Unauthorized />;
 
-  const appalcartEmbed: Embed = {
-    type: "appalcart",
-    content: "@AppalCART Role",
+  const eventEmbed: Embed = {
+    type: "event",
+    content: "@Events Role",
     embeds: [
       {
-        title: "AppalCART Update",
+        title: "Upcoming Event",
         description:
           "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
-        color: "#f12b2b",
-        thumbnail: {
-          url: "https://appstate-discord.pages.dev/appalcart.png",
-        },
-        url: "https://appalcart.com",
+        color: "#e67e22",
+        url: "https://instagram.com",
         fields: [] as EmbedField[],
       },
     ],
@@ -96,9 +91,9 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>AppalCART Update - Yosef</title>
+        <title>Event Announcement - Yosef</title>
       </Head>
-      <EmbedBuilder defaultEmbed={appalcartEmbed} />
+      <EmbedBuilder defaultEmbed={eventEmbed} />
     </>
   );
 }

@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Heading, HStack } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -14,8 +14,6 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [needLogin, setNeedLogin] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  // permission states
   const [serverPerm, setServerPerm] = useState(false);
 
   useEffect(() => {
