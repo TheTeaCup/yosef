@@ -46,6 +46,7 @@ router.post("/callback", async (req: Request, res: Response) => {
     let eventsRole = false;
     let serverAnnoucements = false;
     let appalcartAnnoucements = false;
+    let universityAnnoucements = false;
 
     try {
       const guildMemberResponse = await axios.get(
@@ -67,6 +68,8 @@ router.post("/callback", async (req: Request, res: Response) => {
           false;
         appalcartAnnoucements =
           guildMemberResponse.data?.roles?.includes("1489745777319477359") ??
+          false;
+        universityAnnoucements = guildMemberResponse.data?.roles?.includes("1489745777319477359") ??
           false;
       }
     } catch (err) {
@@ -90,6 +93,7 @@ router.post("/callback", async (req: Request, res: Response) => {
         eventsRole,
         serverAnnoucements,
         appalcartAnnoucements,
+        universityAnnoucements,
       },
       config.JWT_SECRET,
       { expiresIn: "1d" },

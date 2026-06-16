@@ -10,6 +10,7 @@ const DISCORD_WEBHOOKS: Record<string, string> = {
   server: config.DISCORD_SERVER_WEBHOOK!,
   event: config.DISCORD_EVENTS_WEBHOOK!,
   appalcart: config.DISCORD_APPALCART_WEBHOOK!,
+  university: config.DISCORD_UNIVERSITY_WEBHOOK!,
 };
 
 function hexToInt(hex: string) {
