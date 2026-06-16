@@ -125,7 +125,7 @@ export default function Home() {
               Upcoming Event
             </Button>
             <Button
-              colorPalette="red"
+              colorPalette="green"
               variant="solid"
               disabled={!appalcartPerm}
               onClick={() => redirect("/announcement/appalcart")}
@@ -140,19 +140,29 @@ export default function Home() {
             >
               Server Updates
             </Button>
+          </HStack>
+          <br />
+          <HStack justify={"center"}>
             <Button
-              colorPalette="purple"
+              colorPalette="teal"
               variant="solid"
               disabled={!universityPerm}
               onClick={() => redirect("/announcement/university")}
             >
               University Updates
             </Button>
+            <Button
+              colorPalette="orange"
+              variant="solid"
+              onClick={() => redirect("/applications")}
+            >
+              Applications
+            </Button>
           </HStack>
 
           <Button
             mt={6}
-            colorPalette="pink"
+            colorPalette="red"
             variant="solid"
             onClick={() => redirect("/logout")}
           >
