@@ -20,6 +20,7 @@ export default function Home() {
   const [eventsPerm, setEventsPerm] = useState(false);
   const [appalcartPerm, setAppalcartPerm] = useState(false);
   const [serverPerm, setServerPerm] = useState(false);
+  const [universityPerm, setUniversityPerm] = useState(false);
 
   useEffect(() => {
     const token = sessionStorage.getItem("auth_token");
@@ -56,12 +57,14 @@ export default function Home() {
             const hasEvents = data.user.eventsRole;
             const hasAppalcart = data.user.appalcartAnnoucements;
             const hasServer = data.user.serverAnnoucements;
+            const hasUniversity = data.user.universityAnnoucements;
 
             setEventsPerm(hasEvents);
             setAppalcartPerm(hasAppalcart);
             setServerPerm(hasServer);
+            setUniversityPerm(hasUniversity);
 
-            setAuthorized(hasEvents || hasAppalcart || hasServer);
+            setAuthorized(hasEvents || hasAppalcart || hasServer || hasUniversity);
           }
         } else {
           sessionStorage.removeItem("auth_token");
@@ -140,6 +143,14 @@ export default function Home() {
               onClick={() => redirect("/announcement/server")}
             >
               Server Updates
+            </Button>
+            <Button
+              colorPalette="purple"
+              variant="solid"
+              disabled={!universityPerm}
+              onClick={() => redirect("/announcement/university")}
+            >
+              University Updates
             </Button>
           </HStack>
 

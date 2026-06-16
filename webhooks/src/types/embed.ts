@@ -6,7 +6,7 @@ type EmbedField = {
 
 type Embed = {
   content?: string;
-  type?: "event" | "appalcart" | "server";
+  type?: "event" | "appalcart" | "server" | "university";
   embeds: {
     title?: string;
 
