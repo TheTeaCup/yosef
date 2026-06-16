@@ -5,7 +5,7 @@ import { config } from "../../config.js";
 
 const router = Router();
 
-let webhookTypes = ["server", "event", "appalcart"];
+let webhookTypes = ["server", "event", "appalcart", "university"];
 const DISCORD_WEBHOOKS: Record<string, string> = {
   server: config.DISCORD_SERVER_WEBHOOK!,
   event: config.DISCORD_EVENTS_WEBHOOK!,
