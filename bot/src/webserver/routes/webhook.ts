@@ -130,6 +130,7 @@ router.post("/", requireAuth, async (req, res) => {
     server: "serverAnnoucements",
     event: "eventsRole",
     appalcart: "appalcartAnnoucements",
+    university: "universityAnnoucements",
   };
 
   const requiredPerm = permissionMap[type];
