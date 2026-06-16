@@ -6,6 +6,7 @@ import Loading from "@/components/loading";
 import Login from "@/components/login";
 import JoinDiscord from "@/components/join-discord";
 import Unauthorized from "@/components/unauthorized";
+import { useRedirect } from "@/hooks/useRedirect";
 
 export default function Home() {
   const router = useRouter();
@@ -15,6 +16,7 @@ export default function Home() {
   const [joinOurDiscord, setJoinOurDiscord] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [authorized, setAuthorized] = useState(false);
+  const redirect = useRedirect();
 
   // permission states
   const [eventsPerm, setEventsPerm] = useState(false);
@@ -64,7 +66,9 @@ export default function Home() {
             setServerPerm(hasServer);
             setUniversityPerm(hasUniversity);
 
-            setAuthorized(hasEvents || hasAppalcart || hasServer || hasUniversity);
+            setAuthorized(
+              hasEvents || hasAppalcart || hasServer || hasUniversity,
+            );
           }
         } else {
           sessionStorage.removeItem("auth_token");
@@ -81,14 +85,6 @@ export default function Home() {
 
     verifyToken();
   }, [router]);
-
-  interface RedirectFunction {
-    (path: string): void;
-  }
-
-  const redirect: RedirectFunction = (path: string) => {
-    router.push(path);
-  };
 
   if (loading) return <Loading />;
 

@@ -14,8 +14,8 @@ import rehypeRaw from "rehype-raw";
 import remarkBreaks from "remark-breaks";
 import { useEffect, useState } from "react";
 import { Embed, EmbedField } from "@/types/embed";
-import { useRouter } from "next/router";
 import { Toaster, toaster } from "@/components/ui/toaster";
+import { useRedirect } from "@/hooks/useRedirect";
 
 function preprocessDiscord(text: string): string {
   return text
@@ -74,7 +74,7 @@ export default function EmbedBuilder({
 }: {
   defaultEmbed?: Embed;
 }) {
-  const router = useRouter();
+  const redirect = useRedirect();
   const [embed, setEmbed] = useState<Embed>({
     embeds: [],
   });
@@ -185,14 +185,6 @@ export default function EmbedBuilder({
 
   const copyJSON = () => {
     navigator.clipboard.writeText(JSON.stringify(embed, null, 2));
-  };
-
-  interface RedirectFunction {
-    (path: string): void;
-  }
-
-  const redirect: RedirectFunction = (path: string) => {
-    router.push(path);
   };
 
   const e = embed.embeds[0];

@@ -1,4 +1,12 @@
-import { Box, Flex, Field, Input, HStack, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Button,
+  Heading,
+  HStack,
+  Field,
+  Input,
+} from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
@@ -6,7 +14,7 @@ import Loading from "@/components/loading";
 import Login from "@/components/login";
 import { useRedirect } from "@/hooks/useRedirect";
 
-export default function EventCoordinator() {
+export default function Applications() {
   const router = useRouter();
   const [user, setUser] = useState<{ username: string } | null>(null);
   const [loading, setLoading] = useState(true);
@@ -70,9 +78,8 @@ export default function EventCoordinator() {
   return (
     <>
       <Head>
-        <title>Event Coordinator Application - Yosef</title>
+        <title>Applications - Yosef</title>
       </Head>
-
       <Flex
         minH="100vh"
         align="center"
@@ -82,61 +89,36 @@ export default function EventCoordinator() {
         px={6}
         textAlign="center"
       >
-        <Box maxW="2xl">
-          <Box fontSize="4xl" fontWeight="bold" mb={4}>
-            Event Coordinator Application
-          </Box>
-          <Box fontSize="lg" mb={6}>
-            Thank you for your interest in becoming an announcer for our server!
-            We are looking for dedicated individuals to help keep our community
-            informed about upcoming events and news.
-          </Box>
-          <Box fontSize="lg" mb={6}>
-            To apply, please fill out the application form below. We will review
-            your application and get back to you as soon as possible.
-          </Box>
-          <Box>
-            <Field.Root required>
-              <Field.Label>
-                Email <Field.RequiredIndicator />
-              </Field.Label>
-              <Input placeholder="Enter your email" />
-              <Field.HelperText>
-                Provide an @appstate.edu email
-              </Field.HelperText>
-            </Field.Root>
+        <Box>
+          <Heading>Welcome, {user?.username || "Unknown"}!</Heading>
+          <Heading>What would you like to Apply for?</Heading>
 
-            <Field.Root mt={5} required>
-              <Field.Label>
-                Name <Field.RequiredIndicator />
-              </Field.Label>
-              <Input placeholder="Enter your name" />
-              <Field.HelperText>First and Last name please.</Field.HelperText>
-            </Field.Root>
-
-            <Field.Root mt={5} required>
-              <Field.Label>
-                Organization <Field.RequiredIndicator />
-              </Field.Label>
-              <Input placeholder="Example: APPS" />
-              <Field.HelperText>
-                What organization will you be posting for?
-              </Field.HelperText>
-            </Field.Root>
-          </Box>
-          <HStack mt={5} w="100%" justify="flex-end">
-            <Button colorPalette="yellow" variant="solid">
-              Submit
+          <br />
+          <HStack>
+            <Button
+              colorPalette="yellow"
+              variant="solid"
+              onClick={() => redirect("/applications/event-coordinator")}
+            >
+              Event Cordinator
             </Button>
-
             <Button
               colorPalette="red"
               variant="solid"
-              onClick={() => redirect("/applications")}
+              onClick={() => redirect("/applications/staff")}
             >
-              Cancel
+              Staff Member
             </Button>
           </HStack>
+
+          <Button
+            mt={6}
+            colorPalette="blue"
+            variant="solid"
+            onClick={() => redirect("/")}
+          >
+            Back Home
+          </Button>
         </Box>
       </Flex>
     </>

@@ -1,16 +1,8 @@
+import { useRedirect } from "@/hooks/useRedirect";
 import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 export default function Unauthorized() {
-  const router = useRouter();
-
-  interface RedirectFunction {
-    (path: string): void;
-  }
-
-  const redirect: RedirectFunction = (path: string) => {
-    router.push(path);
-  };
+  const redirect = useRedirect();
 
   return (
     <Flex minH="100vh" align="center" justify="center" bg="gray.900" px={4}>

@@ -1,9 +1,10 @@
-import { Box, Flex, Field, Input } from "@chakra-ui/react";
+import { Box, Flex, Field, Input, Button, HStack } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Loading from "@/components/loading";
 import Login from "@/components/login";
+import { useRedirect } from "@/hooks/useRedirect";
 
 export default function StaffApplication() {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function StaffApplication() {
   const [loading, setLoading] = useState(true);
   const [needLogin, setNeedLogin] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const redirect = useRedirect();
 
   useEffect(() => {
     const token = sessionStorage.getItem("auth_token");
@@ -72,8 +74,10 @@ export default function StaffApplication() {
       </Head>
 
       <Flex
+        minH="100vh"
         align="center"
         justify="center"
+        bg="gray.900"
         color="white"
         px={6}
         textAlign="center"
@@ -103,6 +107,19 @@ export default function StaffApplication() {
               <Input placeholder="Enter your name" />
             </Field.Root>
           </Box>
+          <HStack mt={5} w="100%" justify="flex-end">
+            <Button colorPalette="yellow" variant="solid">
+              Submit
+            </Button>
+
+            <Button
+              colorPalette="red"
+              variant="solid"
+              onClick={() => redirect("/applications")}
+            >
+              Cancel
+            </Button>
+          </HStack>
         </Box>
       </Flex>
     </>
