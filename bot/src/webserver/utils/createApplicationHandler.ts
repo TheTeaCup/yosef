@@ -11,14 +11,11 @@ export interface AuthRequest extends Request {
 
 type AnyZodSchema = z.ZodTypeAny;
 
-type EmbedBuilder<T> = (
-  discordId: string,
-  data: T
-) => Record<string, any>;
+type EmbedBuilder<T> = (discordId: string, data: T) => Record<string, any>;
 
 export function createApplicationHandler<T>(
   schema: AnyZodSchema,
-  buildEmbed: EmbedBuilder<T>
+  buildEmbed: EmbedBuilder<T>,
 ) {
   return async (req: AuthRequest, res: Response) => {
     try {
@@ -48,18 +45,15 @@ export function createApplicationHandler<T>(
 
       const embed = buildEmbed(discordId, application);
 
-      const webhookResponse = await fetch(
-        config.DISCORD_APPLICATION_WEBHOOK,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            embeds: [embed],
-          }),
-        }
-      );
+      const webhookResponse = await fetch(config.DISCORD_APPLICATION_WEBHOOK, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          embeds: [embed],
+        }),
+      });
 
       if (!webhookResponse.ok) {
         return res.status(500).json({

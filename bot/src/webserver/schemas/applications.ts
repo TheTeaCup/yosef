@@ -30,7 +30,4 @@ const StaffMemberSchema = z.object({
 export type EventApp = z.infer<typeof EventCoordinatorSchema>;
 export type StaffApp = z.infer<typeof StaffMemberSchema>;
 
-export {
-  EventCoordinatorSchema,
-  StaffMemberSchema,
-};
+export { EventCoordinatorSchema, StaffMemberSchema };

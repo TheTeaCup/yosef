@@ -69,7 +69,8 @@ router.post("/callback", async (req: Request, res: Response) => {
         appalcartAnnoucements =
           guildMemberResponse.data?.roles?.includes("1489745777319477359") ??
           false;
-        universityAnnoucements = guildMemberResponse.data?.roles?.includes("1489745777319477359") ??
+        universityAnnoucements =
+          guildMemberResponse.data?.roles?.includes("1489745777319477359") ??
           false;
       }
     } catch (err) {
