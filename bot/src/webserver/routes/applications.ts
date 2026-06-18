@@ -19,8 +19,8 @@ const staffLimiter = rateLimit({
   keyGenerator: (req) => req.user.id,
   handler: (req, res) => {
     res.status(429).json({
-      success: false,
-      error: "You have already submitted a staff application.",
+      error: true,
+      message: "You have already submitted a staff application.",
     });
   },
 });
@@ -31,8 +31,8 @@ const eventLimiter = rateLimit({
   keyGenerator: (req) => req.user.id,
   handler: (req, res) => {
     res.status(429).json({
-      success: false,
-      error: "You have reached the daily event application limit.",
+      error: true,
+      message: "You have reached the daily event application limit.",
     });
   },
 });
