@@ -1,5 +1,4 @@
 import { Router } from "express";
-import { z } from "zod";
 import rateLimit from "express-rate-limit";
 import { requireAuth } from "../middleware/requireAuth.js";
 
@@ -18,12 +17,24 @@ const staffLimiter = rateLimit({
   windowMs: 7 * 24 * 60 * 60 * 1000, // 7 days
   max: 1,
   keyGenerator: (req) => req.user.id,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      error: "You have already submitted a staff application.",
+    });
+  },
 });
 
 const eventLimiter = rateLimit({
   windowMs: 24 * 60 * 60 * 1000, // 1 day
-  max: 1,
+  max: 3,
   keyGenerator: (req) => req.user.id,
+  handler: (req, res) => {
+    res.status(429).json({
+      success: false,
+      error: "You have reached the daily event application limit.",
+    });
+  },
 });
 
 router.post(
