@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Loading from "@/components/loading";
 import Login from "@/components/login";
 import { useRedirect } from "@/hooks/useRedirect";
+import { Toaster, toaster } from "@/components/ui/toaster";
 
 export default function EventCoordinator() {
   const router = useRouter();
@@ -13,6 +14,21 @@ export default function EventCoordinator() {
   const [needLogin, setNeedLogin] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const redirect = useRedirect();
+
+  const [form, setForm] = useState({
+    type: "eventCoordinator",
+    email: "",
+    name: "",
+    organization: "",
+  });
+  const [submitting, setSubmitting] = useState(false);
+
+  const updateField = (field: keyof typeof form, value: string) => {
+    setForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   useEffect(() => {
     const token = sessionStorage.getItem("auth_token");
@@ -61,6 +77,66 @@ export default function EventCoordinator() {
     verifyToken();
   }, [router]);
 
+  const submitApplication = async () => {
+    try {
+      setSubmitting(true);
+
+      const response = await fetch(
+        "https://yosef-api.hunterwilson.dev/applications/event",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            form,
+            token: sessionStorage.getItem("auth_token"),
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok) {
+        toaster.create({
+          description: data.message,
+          type: "success",
+          closable: true,
+        });
+
+        // Optional: clear form after successful submission
+        // setForm(initialFormState);
+
+        return;
+      }
+
+      const validationErrors =
+        data.issues
+          ?.map(
+            (issue: { field: string; message: string }) =>
+              `${issue.field}: ${issue.message}`,
+          )
+          .join("\n") ?? data.message;
+
+      toaster.create({
+        description: validationErrors,
+        type: "error",
+        closable: true,
+      });
+    } catch (err) {
+      console.error("Application submission failed:", err);
+
+      toaster.create({
+        description:
+          "An error occurred while submitting your application. Please try again later.",
+        type: "error",
+        closable: true,
+      });
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   //if (loading) return <Loading />;
 
   //if (error) return <Box>Error: {error}</Box>;
@@ -69,6 +145,7 @@ export default function EventCoordinator() {
 
   return (
     <>
+      <Toaster />
       <Head>
         <title>Event Coordinator Application - Yosef</title>
       </Head>
@@ -100,7 +177,11 @@ export default function EventCoordinator() {
               <Field.Label>
                 Email <Field.RequiredIndicator />
               </Field.Label>
-              <Input placeholder="Enter your email" />
+              <Input
+                value={form.email}
+                onChange={(e) => updateField("email", e.target.value)}
+                placeholder="Enter your email"
+              />
               <Field.HelperText>
                 Provide an @appstate.edu email
               </Field.HelperText>
@@ -110,7 +191,11 @@ export default function EventCoordinator() {
               <Field.Label>
                 Name <Field.RequiredIndicator />
               </Field.Label>
-              <Input placeholder="Enter your name" />
+              <Input
+                value={form.name}
+                onChange={(e) => updateField("name", e.target.value)}
+                placeholder="Enter your name"
+              />
               <Field.HelperText>First and Last name please.</Field.HelperText>
             </Field.Root>
 
@@ -118,14 +203,23 @@ export default function EventCoordinator() {
               <Field.Label>
                 Organization <Field.RequiredIndicator />
               </Field.Label>
-              <Input placeholder="Example: APPS" />
+              <Input
+                value={form.organization}
+                onChange={(e) => updateField("organization", e.target.value)}
+                placeholder="Example: APPS"
+              />
               <Field.HelperText>
                 What organization will you be posting for?
               </Field.HelperText>
             </Field.Root>
           </Box>
           <HStack mt={5} w="100%" justify="flex-end">
-            <Button colorPalette="yellow" variant="solid">
+            <Button
+              loading={submitting}
+              onClick={submitApplication}
+              colorPalette="yellow"
+              variant="solid"
+            >
               Submit
             </Button>
 
