@@ -1,10 +1,23 @@
 import fs from "fs";
 import crypto from "crypto";
 import { EmbedBuilder, TextBasedChannel } from "discord.js";
+import path from "node:path";
+import { RUNTIME_DATA_DIR } from "./runtimeData.js";
 
-const RULES_PATH = "./src/data/rules.txt";
-const HASH_PATH = "./src/data/hash.txt";
-const DATA_PATH = "./src/data/rulesMessage.json";
+const RULES_PATH = new URL("../data/rules.txt", import.meta.url);
+const HASH_PATH = path.join(RUNTIME_DATA_DIR, "hash.txt");
+const DATA_PATH = path.join(RUNTIME_DATA_DIR, "rulesMessage.json");
+
+fs.mkdirSync(RUNTIME_DATA_DIR, { recursive: true });
+for (const [destination, filename] of [
+  [HASH_PATH, "hash.txt"],
+  [DATA_PATH, "rulesMessage.json"],
+]) {
+  const legacyPath = new URL(`../data/${filename}`, import.meta.url);
+  if (!fs.existsSync(destination) && fs.existsSync(legacyPath)) {
+    fs.copyFileSync(legacyPath, destination);
+  }
+}
 
 interface RulesData {
   channelId: string;

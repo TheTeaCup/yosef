@@ -11,6 +11,9 @@ export default {
   async execute(client: ExtendedClient) {
     console.log(chalk.green.bold(`[App State] Bot is up and ready to go!`));
 
+    await runAppalcartWatcher();
+    setInterval(runAppalcartWatcher, 60 * 1000);
+
     await deployRolePanels(client);
 
     const data = loadData();
@@ -26,8 +29,6 @@ export default {
     } catch (err) {
       console.error("Failed to update rules:", err);
     }
-
-    setInterval(runAppalcartWatcher, 60 * 1000);
 
     const statuses: {
       name: string;

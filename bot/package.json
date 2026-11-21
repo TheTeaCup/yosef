@@ -8,6 +8,7 @@
     "dev-web": "tsx watch src/webserver/index.ts",
     "start": "node dist/index.js",
     "build": "tsc -p .",
+    "test": "node --import tsx --test tests/*.test.mjs",
     "format": "prettier --write \"**/*.{json,ts}\""
   },
   "keywords": [],

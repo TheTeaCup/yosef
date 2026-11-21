@@ -21,7 +21,7 @@ const {
   MYSQL_USERNAME,
   MYSQL_PASSWORD,
   MYSQL_DB,
-  PORT,
+  PORT = "3001",
   JWT_SECRET,
 } = process.env;
 
@@ -41,11 +41,6 @@ if (
   !DISCORD_EVENTS_WEBHOOK ||
   !DISCORD_UNIVERSITY_WEBHOOK ||
   !DISCORD_APPLICATION_WEBHOOK ||
-  !MYSQL_HOST ||
-  !MYSQL_USERNAME ||
-  !MYSQL_PASSWORD ||
-  !MYSQL_DB ||
-  !PORT ||
   !JWT_SECRET
 ) {
   throw new Error("Missing environment variables");

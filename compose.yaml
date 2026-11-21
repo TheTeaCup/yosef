@@ -1,0 +1,42 @@
+services:
+  bot:
+    image: ghcr.io/theteacup/yosef:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    init: true
+    environment:
+      NODE_ENV: production
+      PORT: "3001"
+      TZ: America/New_York
+      BOT_DATA_DIR: /app/bot/data
+      DISCORD_TOKEN: ${DISCORD_TOKEN:?}
+      DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:?}
+      DISCORD_CLIENT_SECRET: ${DISCORD_CLIENT_SECRET:?}
+      DISCORD_GUILD_ID: ${DISCORD_GUILD_ID:?}
+      DISCORD_REDIRECT_URI: ${DISCORD_REDIRECT_URI:?}
+      DISCORD_STAFF_ROLE: ${DISCORD_STAFF_ROLE:?}
+      DISCORD_DEFAULT_ROLE: ${DISCORD_DEFAULT_ROLE:?}
+      DISCORD_MOD_LOGS: ${DISCORD_MOD_LOGS:?}
+      DISCORD_LOG_WEBHOOK_URL: ${DISCORD_LOG_WEBHOOK_URL:?}
+      DISCORD_APPALCART_WEBHOOK: ${DISCORD_APPALCART_WEBHOOK:?}
+      DISCORD_SERVER_WEBHOOK: ${DISCORD_SERVER_WEBHOOK:?}
+      DISCORD_EVENTS_WEBHOOK: ${DISCORD_EVENTS_WEBHOOK:?}
+      DISCORD_UNIVERSITY_WEBHOOK: ${DISCORD_UNIVERSITY_WEBHOOK:?}
+      DISCORD_APPLICATION_WEBHOOK: ${DISCORD_APPLICATION_WEBHOOK:?}
+      JWT_SECRET: ${JWT_SECRET:?}
+    expose:
+      - "3001"
+    volumes:
+      - bot-data:/app/bot/data
+
+  portal:
+    image: ghcr.io/theteacup/yosef-portal:${IMAGE_TAG:-latest}
+    restart: unless-stopped
+    init: true
+    depends_on:
+      bot:
+        condition: service_healthy
+    expose:
+      - "3000"
+
+volumes:
+  bot-data:

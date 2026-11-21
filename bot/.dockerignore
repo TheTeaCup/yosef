@@ -1,0 +1,8 @@
+node_modules
+dist
+.env
+.env.*
+data
+**/appalcartMessages.json
+**/hash.txt
+*.log

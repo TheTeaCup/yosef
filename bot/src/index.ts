@@ -74,7 +74,7 @@ const start = async () => {
     .then(() => Logger.info("Logged into Discord successfully"))
     .catch((err) => {
       Logger.error("Error logging into Discord", err);
-      process.exit();
+      process.exit(1);
     });
 };
 

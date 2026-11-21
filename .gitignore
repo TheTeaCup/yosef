@@ -1,7 +1,9 @@
 node_modules
 .env
-package-lock.json
+/package-lock.json
 dist
 hash.txt
 appalcartMessages.json
+appalcartMessages.json.tmp
 .DS_Store
+/bot/data/

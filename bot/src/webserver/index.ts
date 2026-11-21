@@ -9,6 +9,8 @@ import { config } from "../config.js";
 async function startServer() {
   const app = express();
 
+  app.get("/health", (_req, res) => res.json({ status: "ok" }));
+
   app.use(cors());
   app.use(bodyParser.json());
 
