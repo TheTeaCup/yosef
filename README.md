@@ -1,7 +1,7 @@
 # Yosef Discord Bot
 
 The Discord bot and Express API in `bot/` run on Coolify. The announcement and
-application portal in `webhooks/` stays on its existing Cloudflare Workers deployment.
+application portal in `webhooks/` is a static export hosted on Cloudflare Pages.
 
 ## Production image
 
@@ -60,10 +60,26 @@ Coolify handles TLS and routes the API domain to container port 3001. The Compos
 file uses an internal exposed port without publishing a host port. See the
 [Coolify Compose guide](https://coolify.io/docs/applications/builds/docker-compose).
 
-## Cloudflare Workers: existing portal
+## Cloudflare Pages: portal
 
-Keep the current Workers deployment process. Configure these public **build**
-environment variables there (also listed in `webhooks/example.env`):
+Use the existing `appstate-discord` Pages project. In its build settings, set:
+
+| Setting | Value |
+| --- | --- |
+| Root directory | `webhooks` |
+| Framework preset | Next.js (Static HTML Export), or None with the settings below |
+| Build command | `npm run build` |
+| Build output directory | `out` |
+
+Replace the old `npx @cloudflare/next-on-pages@1` command and
+`.vercel/output/static` output directory. The current portal uses browser-side
+requests to the separate Coolify API and needs no Next.js server or Pages adapter.
+`output: "export"` makes the build generate deployable HTML, JavaScript, CSS, and
+assets in `webhooks/out`. No Wrangler configuration is required for this
+dashboard-managed Pages deployment. Use `npm run dev` for local development;
+`next start` cannot serve a static export.
+
+Keep these public **build** environment variables (also in `webhooks/example.env`):
 
 ```dotenv
 NEXT_PUBLIC_API_URL=https://yosef-api.hunterwilson.dev
@@ -72,13 +88,17 @@ NEXT_PUBLIC_DISCORD_CLIENT_ID=1489747568908042390
 
 Use your Coolify API's public HTTPS origin for `NEXT_PUBLIC_API_URL`, with no
 `/api` suffix. It defaults to the existing API domain above. Use the same Discord
-application ID as the bot. Rebuild/redeploy the Worker after changing either
+application ID as the bot. Rebuild/redeploy Pages after changing either
 value, because Next.js embeds public environment values during the build.
 Do not put the Discord client secret, bot token, or JWT secret in public variables.
 
 The portal calls the API directly across origins; Express already enables CORS.
-There is no portal container or Docker network proxy in this setup. Keep the
-portal's existing domain and match its callback URL in Discord and Coolify.
+Keep the portal's existing Pages/custom domain and match its callback URL in
+Discord and Coolify. The Cloudflare hosting changes do not fix a public 502 from
+the separate Coolify API; that endpoint must also be reachable for login and
+announcement submissions to work.
+
+See [Cloudflare's static Next.js guide](https://developers.cloudflare.com/pages/framework-guides/nextjs/deploy-a-static-nextjs-site/).
 
 ## Preserve existing bot messages
 

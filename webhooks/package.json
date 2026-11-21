@@ -5,7 +5,6 @@
   "scripts": {
     "dev": "next dev --webpack",
     "build": "next build --webpack",
-    "start": "next start",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{tsx,ts,css}\""
   },
