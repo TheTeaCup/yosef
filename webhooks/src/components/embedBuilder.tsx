@@ -143,17 +143,14 @@ export default function EmbedBuilder({
   const sendEmbed = async () => {
     try {
       setSubmitting(true);
-      let embedResponse = await fetch(
-        "https://yosef-api.hunterwilson.dev/webhook/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            embed: embed,
-            token: sessionStorage.getItem("auth_token"),
-          }),
-        },
-      );
+      let embedResponse = await fetch("/api/webhook/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          embed: embed,
+          token: sessionStorage.getItem("auth_token"),
+        }),
+      });
       const data = await embedResponse.json();
 
       if (embedResponse) {

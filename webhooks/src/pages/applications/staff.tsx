@@ -58,16 +58,13 @@ export default function StaffApplication() {
       }
 
       try {
-        const res = await fetch(
-          "https://yosef-api.hunterwilson.dev/auth/valid-token",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
+        const res = await fetch("/api/auth/valid-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({ token }),
+        });
 
         const data = await res.json();
 
@@ -98,19 +95,16 @@ export default function StaffApplication() {
     try {
       setSubmitting(true);
 
-      const response = await fetch(
-        "https://yosef-api.hunterwilson.dev/applications/staff",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            form,
-            token: sessionStorage.getItem("auth_token"),
-          }),
+      const response = await fetch("/api/applications/staff", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          form,
+          token: sessionStorage.getItem("auth_token"),
+        }),
+      });
 
       const data = await response.json();
 

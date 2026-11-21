@@ -14,7 +14,8 @@ export default function JoinDiscord() {
         : "http://localhost:3000/callback";
 
     const params = new URLSearchParams({
-      client_id: "1489747568908042390",
+      client_id:
+        process.env.NEXT_PUBLIC_DISCORD_CLIENT_ID || "1489747568908042390",
       response_type: "code",
       redirect_uri: redirectUri,
       scope: "identify guilds email guilds.members.read",

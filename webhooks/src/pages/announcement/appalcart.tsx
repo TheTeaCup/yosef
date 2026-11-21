@@ -27,16 +27,13 @@ export default function AppalCART() {
       }
 
       try {
-        const res = await fetch(
-          "https://yosef-api.hunterwilson.dev/auth/valid-token",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ token }),
+        const res = await fetch("/api/auth/valid-token", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+          body: JSON.stringify({ token }),
+        });
 
         const data = await res.json();
 
@@ -82,7 +79,7 @@ export default function AppalCART() {
           "*italics* or _italics_     __*underline italics*__\n**bold**     __**underline bold**__\n***bold italics***  __***underline bold italics***__\n__underline__     ~~Strikethrough~~",
         color: "#f12b2b",
         thumbnail: {
-          url: "https://appstate-discord.pages.dev/appalcart.png",
+          url: new URL("/appalcart.png", window.location.origin).href,
         },
         url: "https://appalcart.com",
         fields: [] as EmbedField[],
