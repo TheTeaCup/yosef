@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import type { APIEmbed } from "discord.js";
 
-const ROLE_ID = "1489747165864792185";
+const ROLE_ID = "111111"; //"1489747165864792185";
 
 export type StoredMessage = {
   id: string;
