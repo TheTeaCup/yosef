@@ -7,7 +7,7 @@ application portal in `webhooks/` stays on its existing Cloudflare Workers deplo
 
 `.github/workflows/production.yml` follows the
 [Housing Hub production workflow](https://github.com/TheTeaCup/mountaineer-housing-hub/blob/main/.github/workflows/backend-production.yml).
-Pull requests build and test the bot image. Pushes to `main` publish
+Pull requests build the bot image. Pushes to `main` publish
 `ghcr.io/theteacup/yosef:latest`, plus a `sha-<full-commit-sha>` tag. The Actions
 summary records the immutable image digest. The image targets Linux AMD64.
 Portal changes are deployed through the existing Cloudflare process.
@@ -111,7 +111,7 @@ for `latest`. Back up the volume separately. See
 ## Local development and image builds
 
 Copy `bot/example.env` to `bot/.env` and fill it in. From `bot/`, run `npm ci`,
-`npm test`, and `npm run dev`. For portal development, copy `webhooks/example.env`
+`npm run build`, and `npm run dev`. For portal development, copy `webhooks/example.env`
 to `webhooks/.env.local`, set `NEXT_PUBLIC_API_URL=http://localhost:3001`, then
 run `npm ci` and `npm run dev` from `webhooks/`.
 

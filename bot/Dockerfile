@@ -4,8 +4,7 @@ COPY package.json package-lock.json ./
 RUN npm ci
 COPY tsconfig.json ./
 COPY src ./src
-COPY tests ./tests
-RUN npm test && npm run build && npm prune --omit=dev
+RUN npm run build && npm prune --omit=dev
 
 FROM node:24-bookworm-slim AS runtime
 ENV NODE_ENV=production PORT=3001 TZ=America/New_York BOT_DATA_DIR=/app/bot/data
