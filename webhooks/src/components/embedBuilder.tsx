@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/api";
 import {
   Box,
   Button,
@@ -143,7 +144,7 @@ export default function EmbedBuilder({
   const sendEmbed = async () => {
     try {
       setSubmitting(true);
-      let embedResponse = await fetch("/api/webhook/", {
+      let embedResponse = await fetch(`${API_BASE_URL}/webhook/`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

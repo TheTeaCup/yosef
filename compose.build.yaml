@@ -3,9 +3,3 @@ services:
   bot:
     build:
       context: ./bot
-  portal:
-    build:
-      context: ./webhooks
-      args:
-        API_INTERNAL_URL: http://bot:3001
-        NEXT_PUBLIC_DISCORD_CLIENT_ID: ${DISCORD_CLIENT_ID:?}

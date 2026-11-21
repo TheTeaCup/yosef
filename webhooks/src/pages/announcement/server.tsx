@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/api";
 import { Box } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -27,7 +28,7 @@ export default function Server() {
       }
 
       try {
-        const res = await fetch("/api/auth/valid-token", {
+        const res = await fetch(`${API_BASE_URL}/auth/valid-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

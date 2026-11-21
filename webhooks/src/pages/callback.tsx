@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/api";
 import { Flex, Box, Heading, Spinner } from "@chakra-ui/react";
 import Head from "next/head";
 import { useState, useEffect } from "react";
@@ -28,7 +29,7 @@ export default function OAuthDiscord() {
     }
 
     // Call API
-    fetch("/api/auth/callback", {
+    fetch(`${API_BASE_URL}/auth/callback`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code }),

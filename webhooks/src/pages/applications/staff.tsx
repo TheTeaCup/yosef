@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/api";
 import {
   Box,
   Flex,
@@ -58,7 +59,7 @@ export default function StaffApplication() {
       }
 
       try {
-        const res = await fetch("/api/auth/valid-token", {
+        const res = await fetch(`${API_BASE_URL}/auth/valid-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -95,7 +96,7 @@ export default function StaffApplication() {
     try {
       setSubmitting(true);
 
-      const response = await fetch("/api/applications/staff", {
+      const response = await fetch(`${API_BASE_URL}/applications/staff`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/api";
 import { Box, Flex, Field, Input, HStack, Button } from "@chakra-ui/react";
 import Head from "next/head";
 import { useEffect, useState } from "react";
@@ -41,7 +42,7 @@ export default function EventCoordinator() {
       }
 
       try {
-        const res = await fetch("/api/auth/valid-token", {
+        const res = await fetch(`${API_BASE_URL}/auth/valid-token`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -78,7 +79,7 @@ export default function EventCoordinator() {
     try {
       setSubmitting(true);
 
-      const response = await fetch("/api/applications/event", {
+      const response = await fetch(`${API_BASE_URL}/applications/event`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
