@@ -1,8 +1,6 @@
 import crypto from "crypto";
 import type { APIEmbed } from "discord.js";
 
-const ROLE_ID = "111111"; //"1489747165864792185";
-
 export type StoredMessage = {
   id: string;
   hash: string;
@@ -18,9 +16,8 @@ type AnnouncementGroup = {
 type Dependencies = {
   webhook: {
     send(options: {
-      content: string;
       embeds: APIEmbed[];
-      allowedMentions: { roles: string[] };
+      allowedMentions: { parse: never[] };
     }): Promise<{ id: string }>;
     editMessage(
       id: string,
@@ -30,6 +27,7 @@ type Dependencies = {
     fetchMessage(id: string): Promise<{ embeds: APIEmbed[] }>;
   };
   loadStored(): StoredMessage[];
+  recoverStored?(): Promise<StoredMessage[]>;
   saveStored(entries: StoredMessage[]): void;
   fetchAnnouncements(): Promise<AnnouncementGroup[]>;
   now?: () => number;
@@ -40,7 +38,7 @@ function hash(text: string) {
   return crypto.createHash("sha256").update(text).digest("hex");
 }
 
-function identity(text: string) {
+export function announcementIdentity(text: string) {
   // The feed can roll the dates forward on the same ongoing notice.
   return hash(text.trim().replace(/\s+/g, " "));
 }
@@ -58,14 +56,21 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
   const { webhook, loadStored, saveStored, fetchAnnouncements } = dependencies;
   const logError = dependencies.logError ?? console.error;
   let running = false;
+  let initialized = false;
 
   return async function runAppalcartWatcher() {
     if (running) return;
     running = true;
     try {
       let stored = loadStored();
+      if (!initialized && stored.length === 0 && dependencies.recoverStored) {
+        // A replaced container can lose its local file. Recover the existing
+        // webhook messages before treating every ongoing notice as new.
+        stored = await dependencies.recoverStored();
+      }
       // Commit migrated state and verify storage before any Discord mutation.
       saveStored(stored);
+      initialized = true;
       const now = (dependencies.now ?? Date.now)();
       let announcements: AnnouncementGroup[] = [];
       try {
@@ -91,7 +96,7 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
             now >= end
           )
             continue;
-          active.set(identity(announcement.text), {
+          active.set(announcementIdentity(announcement.text), {
             end,
             legacyHash: hash(announcement.text + announcement.start),
             embed: {
@@ -149,7 +154,7 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
                 ? legacyEmbeds.splice(legacyIndex, 1)[0]
                 : undefined);
             const key = oldEmbed?.description
-              ? identity(oldEmbed.description)
+              ? announcementIdentity(oldEmbed.description)
               : entry.hash;
             const current =
               active.get(key) ??
@@ -164,7 +169,7 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
             };
             return {
               id,
-              hash: identity(embed.description!),
+              hash: announcementIdentity(embed.description!),
               end: current.end,
               embed,
             };
@@ -204,7 +209,7 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
               entry.hash === key ||
               entry.hash === announcement.legacyHash ||
               (entry.embed?.description &&
-                identity(entry.embed.description) === key),
+                announcementIdentity(entry.embed.description) === key),
           )
         )
           continue;
@@ -213,9 +218,8 @@ export function createAppalcartWatcher(dependencies: Dependencies) {
           timestamp: new Date(now).toISOString(),
         };
         const message = await webhook.send({
-          content: `<@&${ROLE_ID}>`,
           embeds: [embed],
-          allowedMentions: { roles: [ROLE_ID] },
+          allowedMentions: { parse: [] },
         });
         stored.push({
           id: message.id,

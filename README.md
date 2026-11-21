@@ -94,10 +94,14 @@ Put these files in the new `bot-data` volume as `appalcartMessages.json`,
 writable by the container's `node` user (UID/GID 1000). The default rules message
 record is included in the image for new installations.
 
-Legacy files can be imported when present in the same installation. A new image
-cannot read files from a removed container. Announcement state is deliberately
-excluded from image builds; skipping migration may produce a fresh post and
-leave old messages without tracked IDs.
+Legacy files can be imported when present in the same installation. If startup
+finds no saved announcement IDs, the bot recovers its existing automated
+AppalCART posts from the webhook channel before sending anything new. The bot
+needs View Channel and Read Message History permissions there. If recovery fails,
+posting waits and retries instead of blindly reposting. Existing automated
+duplicates are tracked for expiration; recovery does not delete active copies.
+New automated notices contain no role mention. Announcement state is deliberately
+excluded from image builds; keep the persistent volume even with this recovery.
 
 Runtime state lives under `BOT_DATA_DIR`: locally `bot/data`, in Docker
 `/app/bot/data`. Rules content and role panel configuration remain in source
